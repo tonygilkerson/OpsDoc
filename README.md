@@ -1,2 +1,2 @@
 # OpsDoc
-Doc for ops
+Doc for ops.
