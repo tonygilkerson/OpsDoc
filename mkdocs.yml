@@ -1,5 +1,10 @@
 site_name: AEG Ops Doc
-nav:
-    - Home: index.md
-    #- About: about.md
-theme: readthedocs
+site_author: Tony Gilkerson
+pages:
+  - Home: index.md
+  - CI/CD:
+    - Create Cluster: cicd/create-cluster.md
+    - Prerequisite Setup: cicd/prerequisite-setup.md
+    - Utility: cicd/util.md
+  - About: about.md
+#theme: readthedocs

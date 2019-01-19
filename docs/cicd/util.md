@@ -1,11 +1,8 @@
 # Utility
 
-[go to start](./start-here.md)
-
-
 Some utility functions and other useful stuff to help debug.
 
-```
+```bash
 kubectl -n <target-namespace> run -it \
 --image ubuntu aegutil --restart=Never --rm sh
 
