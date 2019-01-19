@@ -2,23 +2,93 @@
     "docs": [
         {
             "location": "/",
-            "text": "Welcome to MkDocs\n\n\nFor full documentation visit \nmkdocs.org\n.\n\n\nCommands\n\n\n\n\nmkdocs new [dir-name]\n - Create a new project.\n\n\nmkdocs serve\n - Start the live-reloading docs server.\n\n\nmkdocs build\n - Build the documentation site.\n\n\nmkdocs help\n - Print this help message.\n\n\n\n\nProject layout\n\n\nmkdocs.yml    # The configuration file.\ndocs/\n    index.md  # The documentation homepage.\n    ...       # Other markdown pages, images and other files.",
+            "text": "Welcome to OpsDoc\n\n\nHere you will find my personal notes on setting up CI/CD on Kubernetes.",
             "title": "Home"
         },
         {
-            "location": "/#welcome-to-mkdocs",
-            "text": "For full documentation visit  mkdocs.org .",
-            "title": "Welcome to MkDocs"
+            "location": "/#welcome-to-opsdoc",
+            "text": "Here you will find my personal notes on setting up CI/CD on Kubernetes.",
+            "title": "Welcome to OpsDoc"
         },
         {
-            "location": "/#commands",
-            "text": "mkdocs new [dir-name]  - Create a new project.  mkdocs serve  - Start the live-reloading docs server.  mkdocs build  - Build the documentation site.  mkdocs help  - Print this help message.",
-            "title": "Commands"
+            "location": "/cicd/create-cluster/",
+            "text": "Create a cluster\n\n\nDoc4Win\n\n\nFollow \nthe docker-for-windows doc\n to create a cluster on a windows workstation.\n\n\nKubernetes dashboard\n\n\nThe full instructions can be found on the \nKubernetes dashboard readme page\n, in short, run the following:\n\n\nkubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml\n\n\n\n\nAcessing the dashboard UI\n\n\nRun \nkubectl proxy\n then open \nhttp://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/\n in your browser.\n\n\nTo log onto the UI you will need a token. Do the following to get a valid token:\n\n\nSECRET_NAME=$(kubectl -n kube-system \\\nget serviceAccount kubernetes-dashboard \\\n-o  jsonpath='{.secrets[0].name}')\n\nkubectl -n kube-system describe secrets/$SECRET_NAME\n# copy token from the output and use it to log onto the dashboard\n\n\n\n\nFor more informatoin on how to configure access see the following:\n\n\n\n\nAccessing the dashboard UI\n\n\nConfigure Service Account\n\n\n\n\nIngress\n\n\nI got the ingress to work fine on docker-for-win by following the \ninstall instructions for mac\n, in short, run the following:\n\n\nkubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml\nkubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml",
+            "title": "Create Cluster"
         },
         {
-            "location": "/#project-layout",
-            "text": "mkdocs.yml    # The configuration file.\ndocs/\n    index.md  # The documentation homepage.\n    ...       # Other markdown pages, images and other files.",
-            "title": "Project layout"
+            "location": "/cicd/create-cluster/#create-a-cluster",
+            "text": "",
+            "title": "Create a cluster"
+        },
+        {
+            "location": "/cicd/create-cluster/#doc4win",
+            "text": "Follow  the docker-for-windows doc  to create a cluster on a windows workstation.",
+            "title": "Doc4Win"
+        },
+        {
+            "location": "/cicd/create-cluster/#kubernetes-dashboard",
+            "text": "The full instructions can be found on the  Kubernetes dashboard readme page , in short, run the following:  kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml",
+            "title": "Kubernetes dashboard"
+        },
+        {
+            "location": "/cicd/create-cluster/#acessing-the-dashboard-ui",
+            "text": "Run  kubectl proxy  then open  http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/  in your browser.  To log onto the UI you will need a token. Do the following to get a valid token:  SECRET_NAME=$(kubectl -n kube-system \\\nget serviceAccount kubernetes-dashboard \\\n-o  jsonpath='{.secrets[0].name}')\n\nkubectl -n kube-system describe secrets/$SECRET_NAME\n# copy token from the output and use it to log onto the dashboard  For more informatoin on how to configure access see the following:   Accessing the dashboard UI  Configure Service Account",
+            "title": "Acessing the dashboard UI"
+        },
+        {
+            "location": "/cicd/create-cluster/#ingress",
+            "text": "I got the ingress to work fine on docker-for-win by following the  install instructions for mac , in short, run the following:  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml\nkubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml",
+            "title": "Ingress"
+        },
+        {
+            "location": "/cicd/prerequisite-setup/",
+            "text": "Client Tools\n\n\nkubectl\n\n\nFollow the \nInstall and Setup kubectl\n instructions on the official kubernetes site.\n\n\nhelm\n\n\nCurrently helm v2 needs tiller, when we get to v3 tiller will go away.  To install tiller:\n\n\ncd k8s-spec\n\n# Create service account\nkubectl create \\\n  -f helm/tiller-rbac.yml\n\n# Install server side tiller\nhelm init --service-account tiller\n\n# verify\nkubectl -n kube-system \\\n  rollout status deploy tiller-deploy\n\n\n\n\n\nChart Museum\n\n\nInstall \nstable/chartmuseum\n chart with override values (p. 130).\n\n\ncd kube-spec\n\n# set chartmuseum host env vars\necho $LB_IP\nCM_ADDR=\"cm.$LB_IP.nip.io\"\nCM_ADDR_ESC=$(echo $CM_ADDR | sed -e \"s@\\.@\\\\\\.@g\")\necho $CM_ADDR_ESC\n\n\nhelm install stable/chartmuseum \\\n--namespace charts \\\n--name cm \\\n--values helm/chartmuseum-values.yml \\\n--set ingress.hosts.\"$CM_ADDR_ESC\"={\"/\"} \\\n--set env.secret.BASIC_AUTH_USER=admin \\\n--set env.secret.BASIC_AUTH_PASS=admin\n\n# verify\nkubectl -n charts \\\nrollout status deploy \\\ncm-chartmuseum\n\ncurl \"http://$CM_ADDR/health\"  \ncurl \"http://$CM_ADDR/index.yaml\" -u admin:admin\n\n\n\n\nAdd the repo to helm so you can push charts to it.\n\n\nhelm plugin install \\\nhttps://github.com/chartmuseum/helm-push\n\nhelm push \\\n<my-chart> \\\nchartmuseum \\\n--username admin \\\n--password admin\n\n# can also do this\nhelm search chartmuseum/\nhelm repo update\nhelm search chartmuseum/\nhelm inspect chartmuseum/<my-chart>\n\n\n\n\n\nMore useful command can be found at \nvfarcic gist\n\n\nUpgrade\n\n\nTo upgrade after modifying values.\n\n\n helm upgrade cm stable/chartmuseum \\\n  --values helm/chartmuseum-values.yml \\\n  --set ingress.hosts.\"$CM_ADDR_ESC\"={\"/\"} \\\n  --set env.secret.BASIC_AUTH_USER=admin \\\n  --set env.secret.BASIC_AUTH_PASS=admin\n\n\n\n\n\nAccessing the UI\n\n\nTo access chartmuseum from my laptop I use \n$CM_ADDR\n as seen above however this is not valid in a pipeline build container. From within a container use the \nhttp://[SERVICE_NAME].[NAMESPACE]\n format as seen here:\n\n\n# from within the cluster, pod to pod\nhttp://cm-chartmuseum.charts:8080\n\n# from my browser\nhttp://cm.127.0.0.1.nip.io",
+            "title": "Prerequisite Setup"
+        },
+        {
+            "location": "/cicd/prerequisite-setup/#client-tools",
+            "text": "",
+            "title": "Client Tools"
+        },
+        {
+            "location": "/cicd/prerequisite-setup/#kubectl",
+            "text": "Follow the  Install and Setup kubectl  instructions on the official kubernetes site.",
+            "title": "kubectl"
+        },
+        {
+            "location": "/cicd/prerequisite-setup/#helm",
+            "text": "Currently helm v2 needs tiller, when we get to v3 tiller will go away.  To install tiller:  cd k8s-spec\n\n# Create service account\nkubectl create \\\n  -f helm/tiller-rbac.yml\n\n# Install server side tiller\nhelm init --service-account tiller\n\n# verify\nkubectl -n kube-system \\\n  rollout status deploy tiller-deploy",
+            "title": "helm"
+        },
+        {
+            "location": "/cicd/prerequisite-setup/#chart-museum",
+            "text": "Install  stable/chartmuseum  chart with override values (p. 130).  cd kube-spec\n\n# set chartmuseum host env vars\necho $LB_IP\nCM_ADDR=\"cm.$LB_IP.nip.io\"\nCM_ADDR_ESC=$(echo $CM_ADDR | sed -e \"s@\\.@\\\\\\.@g\")\necho $CM_ADDR_ESC\n\n\nhelm install stable/chartmuseum \\\n--namespace charts \\\n--name cm \\\n--values helm/chartmuseum-values.yml \\\n--set ingress.hosts.\"$CM_ADDR_ESC\"={\"/\"} \\\n--set env.secret.BASIC_AUTH_USER=admin \\\n--set env.secret.BASIC_AUTH_PASS=admin\n\n# verify\nkubectl -n charts \\\nrollout status deploy \\\ncm-chartmuseum\n\ncurl \"http://$CM_ADDR/health\"  \ncurl \"http://$CM_ADDR/index.yaml\" -u admin:admin  Add the repo to helm so you can push charts to it.  helm plugin install \\\nhttps://github.com/chartmuseum/helm-push\n\nhelm push \\\n<my-chart> \\\nchartmuseum \\\n--username admin \\\n--password admin\n\n# can also do this\nhelm search chartmuseum/\nhelm repo update\nhelm search chartmuseum/\nhelm inspect chartmuseum/<my-chart>  More useful command can be found at  vfarcic gist",
+            "title": "Chart Museum"
+        },
+        {
+            "location": "/cicd/prerequisite-setup/#upgrade",
+            "text": "To upgrade after modifying values.   helm upgrade cm stable/chartmuseum \\\n  --values helm/chartmuseum-values.yml \\\n  --set ingress.hosts.\"$CM_ADDR_ESC\"={\"/\"} \\\n  --set env.secret.BASIC_AUTH_USER=admin \\\n  --set env.secret.BASIC_AUTH_PASS=admin",
+            "title": "Upgrade"
+        },
+        {
+            "location": "/cicd/prerequisite-setup/#accessing-the-ui",
+            "text": "To access chartmuseum from my laptop I use  $CM_ADDR  as seen above however this is not valid in a pipeline build container. From within a container use the  http://[SERVICE_NAME].[NAMESPACE]  format as seen here:  # from within the cluster, pod to pod\nhttp://cm-chartmuseum.charts:8080\n\n# from my browser\nhttp://cm.127.0.0.1.nip.io",
+            "title": "Accessing the UI"
+        },
+        {
+            "location": "/cicd/util/",
+            "text": "Utility\n\n\nSome utility functions and other useful stuff to help debug.\n\n\nkubectl -n <target-namespace> run -it \\\n--image ubuntu aegutil --restart=Never --rm sh\n\n# then you can...\napt-get update\napt-get install curl\napt-get install iputils-ping",
+            "title": "Utility"
+        },
+        {
+            "location": "/cicd/util/#utility",
+            "text": "Some utility functions and other useful stuff to help debug.  kubectl -n <target-namespace> run -it \\\n--image ubuntu aegutil --restart=Never --rm sh\n\n# then you can...\napt-get update\napt-get install curl\napt-get install iputils-ping",
+            "title": "Utility"
+        },
+        {
+            "location": "/about/",
+            "text": "This is my personal notes on CI/CD on Kubernetes.",
+            "title": "About"
         }
     ]
 }

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Tony Gilkerson">
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Prerequisite Setup - AEG Ops Doc</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/highlight.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../..">AEG Ops Doc</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">CI/CD <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../create-cluster/">Create Cluster</a>
+</li>
+                            
+<li class="active">
+    <a href="./">Prerequisite Setup</a>
+</li>
+                            
+<li >
+    <a href="../util/">Utility</a>
+</li>
+                        </ul>
+                    </li>
+                    <li >
+                        <a href="../../about/">About</a>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../create-cluster/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../util/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#client-tools">Client Tools</a></li>
+            <li><a href="#kubectl">kubectl</a></li>
+            <li><a href="#helm">helm</a></li>
+        <li class="main "><a href="#chart-museum">Chart Museum</a></li>
+            <li><a href="#upgrade">Upgrade</a></li>
+            <li><a href="#accessing-the-ui">Accessing the UI</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="client-tools">Client Tools</h1>
+<h2 id="kubectl">kubectl</h2>
+<p>Follow the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Install and Setup kubectl</a> instructions on the official kubernetes site.</p>
+<h2 id="helm">helm</h2>
+<p>Currently helm v2 needs tiller, when we get to v3 tiller will go away.  To install tiller:</p>
+<pre><code class="bash">cd k8s-spec
+
+# Create service account
+kubectl create \
+  -f helm/tiller-rbac.yml
+
+# Install server side tiller
+helm init --service-account tiller
+
+# verify
+kubectl -n kube-system \
+  rollout status deploy tiller-deploy
+
+</code></pre>
+
+<h1 id="chart-museum">Chart Museum</h1>
+<p>Install <code>stable/chartmuseum</code> chart with override values (p. 130).</p>
+<pre><code class="bash">cd kube-spec
+
+# set chartmuseum host env vars
+echo $LB_IP
+CM_ADDR=&quot;cm.$LB_IP.nip.io&quot;
+CM_ADDR_ESC=$(echo $CM_ADDR | sed -e &quot;s@\.@\\\.@g&quot;)
+echo $CM_ADDR_ESC
+
+
+helm install stable/chartmuseum \
+--namespace charts \
+--name cm \
+--values helm/chartmuseum-values.yml \
+--set ingress.hosts.&quot;$CM_ADDR_ESC&quot;={&quot;/&quot;} \
+--set env.secret.BASIC_AUTH_USER=admin \
+--set env.secret.BASIC_AUTH_PASS=admin
+
+# verify
+kubectl -n charts \
+rollout status deploy \
+cm-chartmuseum
+
+curl &quot;http://$CM_ADDR/health&quot;  
+curl &quot;http://$CM_ADDR/index.yaml&quot; -u admin:admin
+</code></pre>
+
+<p>Add the repo to helm so you can push charts to it.</p>
+<pre><code class="bash">helm plugin install \
+https://github.com/chartmuseum/helm-push
+
+helm push \
+&lt;my-chart&gt; \
+chartmuseum \
+--username admin \
+--password admin
+
+# can also do this
+helm search chartmuseum/
+helm repo update
+helm search chartmuseum/
+helm inspect chartmuseum/&lt;my-chart&gt;
+
+</code></pre>
+
+<p>More useful command can be found at <a href="https://gist.github.com/vfarcic/e0657623045b43259fe258a146f05e1a">vfarcic gist</a></p>
+<h2 id="upgrade">Upgrade</h2>
+<p>To upgrade after modifying values.</p>
+<pre><code class="bash"> helm upgrade cm stable/chartmuseum \
+  --values helm/chartmuseum-values.yml \
+  --set ingress.hosts.&quot;$CM_ADDR_ESC&quot;={&quot;/&quot;} \
+  --set env.secret.BASIC_AUTH_USER=admin \
+  --set env.secret.BASIC_AUTH_PASS=admin
+
+</code></pre>
+
+<h2 id="accessing-the-ui">Accessing the UI</h2>
+<p>To access chartmuseum from my laptop I use <code>$CM_ADDR</code> as seen above however this is not valid in a pipeline build container. From within a container use the <em>http://[SERVICE_NAME].[NAMESPACE]</em> format as seen here:</p>
+<pre><code class="bash"># from within the cluster, pod to pod
+http://cm-chartmuseum.charts:8080
+
+# from my browser
+http://cm.127.0.0.1.nip.io
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '../..';</script>
+        <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+        <script src="../../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
