@@ -80,24 +80,44 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#create-a-cluster">Create a cluster</a></li>
-            <li><a href="#doc4win">Doc4Win</a></li>
+        <li class="main active"><a href="#introduction">Introduction</a></li>
+        <li class="main "><a href="#create-a-cluster">Create a cluster</a></li>
+            <li><a href="#docker-for-windows">Docker for Windows</a></li>
             <li><a href="#kubernetes-dashboard">Kubernetes dashboard</a></li>
             <li><a href="#accessing-the-dashboard-ui">Accessing the dashboard UI</a></li>
-            <li><a href="#ingress">Ingress</a></li>
+            <li><a href="#ingress-install">Ingress Install</a></li>
+        <li class="main "><a href="#define-some-environment-variables">Define Some Environment Variables</a></li>
         <li class="main "><a href="#client-tools">Client Tools</a></li>
             <li><a href="#kubectl">kubectl</a></li>
             <li><a href="#helm">helm</a></li>
         <li class="main "><a href="#chart-museum">Chart Museum</a></li>
+            <li><a href="#install-chart">Install Chart</a></li>
+            <li><a href="#add-to-helm-client">Add to helm client</a></li>
             <li><a href="#upgrade">Upgrade</a></li>
             <li><a href="#accessing-the-ui">Accessing the UI</a></li>
-        <li class="main "><a href="#utility">Utility</a></li>
+        <li class="main "><a href="#jenkins">Jenkins</a></li>
+            <li><a href="#install">Install</a></li>
+            <li><a href="#namespace-urls">Namespace URLs</a></li>
+            <li><a href="#tiller">Tiller</a></li>
+            <li><a href="#rbac">RBAC</a></li>
+            <li><a href="#global-pipeline-libraries">Global Pipeline Libraries</a></li>
+            <li><a href="#global-credentials">Global credentials</a></li>
+            <li><a href="#upgrade-jenkins">Upgrade Jenkins</a></li>
+        <li class="main "><a href="#prepare-apps">Prepare Apps</a></li>
+            <li><a href="#go-demo-5">go-demo-5</a></li>
+            <li><a href="#aegjxnode">aegjxnode</a></li>
+        <li class="main "><a href="#deploy-environment">Deploy Environment</a></li>
+            <li><a href="#manual-deploy">Manual Deploy</a></li>
+        <li class="main "><a href="#jeninsx">JeninsX</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
+<h1 id="introduction">Introduction</h1>
+<p>This sections contains the notes taken while reading <a href="https://leanpub.com/the-devops-2-4-toolkit">The DevOps 2.4 Toolkit</a>.  References to page numbers are assumed to be from this book unless otherwise specified.</p>
+<hr />
 <h1 id="create-a-cluster">Create a cluster</h1>
-<h2 id="doc4win">Doc4Win</h2>
+<h2 id="docker-for-windows">Docker for Windows</h2>
 <p>Follow <a href="https://docs.docker.com/v17.09/docker-for-windows/install/">the docker-for-windows doc</a> to create a cluster on a windows workstation.</p>
 <h2 id="kubernetes-dashboard">Kubernetes dashboard</h2>
 <p>The full instructions can be found on the <a href="https://github.com/kubernetes/dashboard">Kubernetes dashboard readme page</a>, in short, run the following:</p>
@@ -120,12 +140,53 @@ kubectl -n kube-system describe secrets/$SECRET_NAME
 <li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui">Accessing the dashboard UI</a></li>
 <li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/">Configure Service Account</a></li>
 </ul>
-<h2 id="ingress">Ingress</h2>
+<h2 id="ingress-install">Ingress Install</h2>
 <p>I got the ingress to work fine on docker-for-win by following the <a href="https://kubernetes.github.io/ingress-nginx/deploy/">install instructions for mac</a>, in short, run the following:</p>
 <pre><code class="bash">kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml
 </code></pre>
 
+<hr />
+<h1 id="define-some-environment-variables">Define Some Environment Variables</h1>
+<p>To make live easy let set some environment variables for our shell:</p>
+<p><strong>LB_IP</strong></p>
+<p>Find your loadBalancer IP:</p>
+<p>On docker-for-windows this is <code>127.0.0.1</code>  for other cluster you can try the following:</p>
+<pre><code class="bash">kubectl -n ingress-nginx get svc ingress-nginx -o jsonpath=&quot;{.status.loadBalancer.ingress[0].hostname}&quot;
+#or
+kubectl -n ingress-nginx get svc ingress-nginx -o jsonpath=&quot;{.status.loadBalancer.ingress[0].ip}&quot;
+
+
+# set it
+LB_IP=&quot;127.0.0.1&quot;
+
+# or make it stick do this
+echo &quot;export LB_IP=127.0.0.1&quot; &gt;&gt; ~/.profile
+. ~/.profile
+</code></pre>
+
+<p><strong>ADDR</strong></p>
+<pre><code class="bash">ADDR=$LB_IP.nip.io
+echo $ADDR
+ADDR_ESC=$(echo $ADDR | sed -e &quot;s@\.@\\\.@g&quot;)
+echo $ADDR_ESC
+
+# or make it stick do this
+echo &quot;export ADDR=$LB_IP.nip.io&quot; &gt;&gt; ~/.profile
+echo 'ADDR_ESC=$(echo $ADDR | sed -e &quot;s@\.@\\\.@g&quot;)' &gt;&gt; ~/.profile
+. ~/.profile
+</code></pre>
+
+<p><strong>DH_USER</strong></p>
+<p>Docker Hub user</p>
+<pre><code class="bash">DH_USER=&quot;tonygilkerson&quot;
+echo &quot;export DH_USER=tonygilkerson&quot; &gt;&gt; ~/.profile
+. ~/.profile
+
+echo $DH_USER
+</code></pre>
+
+<hr />
 <h1 id="client-tools">Client Tools</h1>
 <h2 id="kubectl">kubectl</h2>
 <p>Follow the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Install and Setup kubectl</a> instructions on the official kubernetes site.</p>
@@ -146,7 +207,9 @@ kubectl -n kube-system \
 
 </code></pre>
 
+<hr />
 <h1 id="chart-museum">Chart Museum</h1>
+<h2 id="install-chart">Install Chart</h2>
 <p>Install <code>stable/chartmuseum</code> chart with override values (p. 130).</p>
 <pre><code class="bash">cd kube-spec
 
@@ -156,7 +219,7 @@ CM_ADDR=&quot;cm.$LB_IP.nip.io&quot;
 CM_ADDR_ESC=$(echo $CM_ADDR | sed -e &quot;s@\.@\\\.@g&quot;)
 echo $CM_ADDR_ESC
 
-
+# install chart
 helm install stable/chartmuseum \
 --namespace charts \
 --name cm \
@@ -172,19 +235,18 @@ cm-chartmuseum
 
 curl &quot;http://$CM_ADDR/health&quot;  
 curl &quot;http://$CM_ADDR/index.yaml&quot; -u admin:admin
+
 </code></pre>
 
-<p>Add the repo to helm so you can push charts to it.</p>
-<pre><code class="bash">helm plugin install \
-https://github.com/chartmuseum/helm-push
+<h2 id="add-to-helm-client">Add to helm client</h2>
+<p>Add the chartmuseum repo to the helm client, then install a plugin that will allow us to push charts to the repo via helm CLI.</p>
+<pre><code class="bash">helm repo add chartmuseum http://$CM_ADDR --username admin --password admin
+helm plugin install https://github.com/chartmuseum/helm-push
 
-helm push \
-&lt;my-chart&gt; \
-chartmuseum \
---username admin \
---password admin
+# example push
+helm push /path/to/chart chartmuseum --username admin --password admin
 
-# can also do this
+# we can also do this
 helm search chartmuseum/
 helm repo update
 helm search chartmuseum/
@@ -212,9 +274,281 @@ http://cm-chartmuseum.charts:8080
 http://cm.127.0.0.1.nip.io
 </code></pre>
 
-<h1 id="utility">Utility</h1>
-<p>Some utility functions and other useful stuff to help debug.</p>
-<pre><code class="bash">kubectl -n &lt;target-namespace&gt; run -it \
+<hr />
+<h1 id="jenkins">Jenkins</h1>
+<h2 id="install">Install</h2>
+<p>Install <code>stable/jenkins</code> chart with override values (p. 130).</p>
+<pre><code>cd kube-spec
+
+# set jenkins host env vars
+echo $LB_IP
+JENKINS_ADDR=&quot;jenkins.$LB_IP.nip.io&quot;
+echo $JENKINS_ADDR
+
+# install jenkins (p. 135 and p. 179)
+helm install stable/jenkins \
+--name jenkins \
+--namespace jenkins \
+--values helm/jenkins-values.yml \
+--set Master.HostName=$JENKINS_ADDR
+
+# verify
+kubectl -n jenkins rollout status deployment jenkins
+</code></pre>
+
+<p>open <code>http://$JENKINS_ADDR/configure</code> (i.e. http://jenkins.127.0.0.1.nip.io) use the <code>JENKINS_PASS</code> to logon as <code>admin</code>.</p>
+<pre><code>JENKINS_PASS=$(kubectl -n jenkins get secret jenkins \
+-o jsonpath=&quot;{.data.jenkins-admin-password}&quot; | base64 --decode)
+
+echo $JENKINS_PASS
+</code></pre>
+
+<h2 id="namespace-urls">Namespace URLs</h2>
+<p>To allow communication between the Jenkins master and the slave nodes in other namespaces open <code>http://$JENKINS_ADDR/configure</code> and change the <em>http://[NAMESPACE]</em> format to the <em>http://[SERVICE_NAME].[NAMESPACE]</em> as shown in the following table.</p>
+<p><em>Cloud-&gt;Kubernetes Section:</em></p>
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>old values</th>
+<th>updated value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jenkins URL</td>
+<td>http://jenkins:8080</td>
+<td>http://jenkins.jenkins:8080</td>
+</tr>
+<tr>
+<td>Jenkins tunnel</td>
+<td>jenkins-agent:50000</td>
+<td>jenkins-agent.jenkins:50000</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tiller">Tiller</h2>
+<p><em>Note:</em> We have Tiller running in the <code>kube-system</code> Namespace. However, our agent Pods running in <code>&lt;app-namespace&gt;</code> do not have permissions to access it. We could extend the permissions, but that would allow the pods in that Namespace to gain almost complete control over the whole cluster. Unless your organization is very small, that is often not acceptable. Instead, we’ll deploy another Tiller instance in the <code>&lt;app-namespace&gt;</code> namespace and tie it to the <code>build</code> ServiceAccount. That will give the new tiller the same permissions in the <code>&lt;app-namespace&gt;</code> namespace. It’ll be able to do anything in those, but nothing anywhere else (p. 195).</p>
+<pre><code class="bash">helm init --service-account build --tiller-namespace &lt;app-namespace&gt;
+</code></pre>
+
+<h2 id="rbac">RBAC</h2>
+<p>This next section I am not so sure about.  Docker-for-windows does not seem to use the rbac, so I will have to validate the following in a real cluster.</p>
+<p>Add rbac for jenkins builds.</p>
+<pre><code class="bash">kubectl apply -f k8s/ns.yml
+</code></pre>
+
+<h2 id="global-pipeline-libraries">Global Pipeline Libraries</h2>
+<p>Open <code>http://jenkins.$ADDR/configure</code></p>
+<p>Search for <em>Global Pipeline Libraries</em> section of the configuration, and click the Add button. Type <code>my-library</code> as the Name (it can be anything else) and <code>master</code> as the Default version. In our context, the latter defines the branch from which we’ll load the libraries.</p>
+<p>Next, we’ll click the <em>Load implicitly</em> checkbox. As a result, the libraries will be available automatically to all the pipeline jobs. Otherwise, our jobs would need to have @Library('my-library') instruction. Select <em>Modern SCM</em> from the Retrieval method section and select <code>Git</code> from <em>Source Code Management</em> and then specify the repository from which Jenkins will load the libraries <code>https://github.com/tgilkerson/jenkins-shared-libraries.git</code></p>
+<p>Don’t forget to click the Save button to persist the changes!</p>
+<h2 id="global-credentials">Global credentials</h2>
+<p>Select <em>Credentials</em> and in the <em>global</em> store for the <em>Jenkins</em> scope, then click to <em>Add Credentials</em></p>
+<p><em>Docker Hub</em>
+<em> scope: Global
+</em> Username: tonygilkerson
+<em> Password: </em>mypwd<em>
+</em> ID: docker</p>
+<p><em>Chart Museum</em>
+<em> scope: Global
+</em> Username: admin
+<em> Password: admin
+</em> ID: chartmuseum</p>
+<h2 id="upgrade-jenkins">Upgrade Jenkins</h2>
+<p>To upgrade after modifying values in <code>helm/jenkins-values.yml</code> (pg126)</p>
+<pre><code class="bash"> helm upgrade jenkins stable/jenkins \
+ --values helm/jenkins-values.yml \
+ --set Master.HostName=$HOST \
+ --reuse-values
+
+</code></pre>
+
+<hr />
+<h1 id="prepare-apps">Prepare Apps</h1>
+<h2 id="go-demo-5">go-demo-5</h2>
+<pre><code class="bash">cd go-demo-5
+kubectl apply -f k8s/build.yml
+
+# do once then commit changes
+cat Jenkinsfile.orig \
+| sed -e &quot;s@acme.com@$ADDR@g&quot; \
+| sed -e &quot;s@vfarcic@$DH_USER@g&quot; \
+| tee Jenkinsfile
+
+# do once then commit changes
+cat helm/go-demo-5/deployment-orig.yaml \
+| sed -e &quot;s@vfarcic@$DH_USER@g&quot; \
+| tee helm/go-demo-5/templates/deployment.yaml
+
+git add .
+git commit -m &quot;set docker hub user&quot;
+git push
+</code></pre>
+
+<p><strong>Install Tiller for this app</strong></p>
+<pre><code class="bash">helm init --service-account build \
+--tiller-namespace go-demo-5-build
+</code></pre>
+
+<p><strong>Create Jenkins Cloud for this App</strong></p>
+<p>If you look in the Jenkinsfile you will see a reference to <code>go-demo5-build</code>.  </p>
+<pre><code class="bash">cd go-demo-5
+cat Jenkinsfile
+
+...
+  agent {
+    kubernetes {
+      cloud &quot;go-demo-5-build&quot;
+      label &quot;go-demo-5-build&quot;
+      serviceAccount &quot;build&quot;
+      yamlFile &quot;KubernetesPod.yaml&quot;
+    }
+...
+
+</code></pre>
+
+<p>To configure the cloud open the Jenkins UI and navigate to the <code>/configure</code> page.</p>
+<p>Please scroll to the bottom of the page, expand the <em>Add a new cloud</em> list, and select <em>Kubernetes</em>. A new set of fields will appear. Type <code>go-demo-5-build</code> as the name. It matches the cloud entry inside kubernetes block of our pipeline. Next, type <code>go-demo-5-build</code> as the Kubernetes Namespace. Just as with the other Kubernetes Cloud that was already defined in our Jenkins instance, the value of the Jenkins URL should be <code>http://prod-jenkins.prod:8080</code>, and the Jenkins tunnel should be set to <code>prod-jenkins-agent.prod:50000</code>.</p>
+<p><strong>Sandbox</strong></p>
+<p>To test a release:</p>
+<pre><code>SANDBOX_ADDR=&quot;go-demo-5-sandbox.$ADDR&quot;
+
+helm install helm/go-demo-5 -n go-demo-5-sandbox --namespace go-demo-5-sandbox
+
+# when done
+helm delete go-demo-5-sandbox --purge
+</code></pre>
+
+<p>TODO add verification steps</p>
+<hr />
+<h2 id="aegjxnode">aegjxnode</h2>
+<pre><code class="bash">cd aegjxnode
+kubectl apply -f k8s/build.yml
+
+# edit Jenkinsfile and set correct values for the environment section
+...
+environment {
+  image = &quot;tonygilkerson/aegjxnode&quot;
+  project = &quot;aegjxnode-build&quot;
+  domain = &quot;127.0.0.1.nip.io&quot;
+  cmAddr = &quot;cm-chartmuseum.charts:8080&quot;
+}
+...
+
+# make it stick
+git add .
+git commit -m &quot;set docker hub user&quot;
+git push
+</code></pre>
+
+<p><strong>Install Tiller for this app</strong></p>
+<pre><code class="bash">helm init --service-account build \
+--tiller-namespace aegjxnode-build
+</code></pre>
+
+<p><strong>Create Jenkins Cloud for this App</strong></p>
+<p>If you look in the Jenkinsfile you will see a reference to <code>aegjxnode-build</code>.  </p>
+<pre><code class="bash">cd aegjxnode
+cat Jenkinsfile
+
+...
+  agent {
+    kubernetes {
+      cloud &quot;aegjxnode-build&quot;
+      label &quot;aegjxnode-build&quot;
+      serviceAccount &quot;build&quot;
+      yamlFile &quot;KubernetesPod.yaml&quot;
+    }
+...
+
+</code></pre>
+
+<p>To configure the cloud open the Jenkins UI and navigate to the <code>/configure</code> page.</p>
+<p>Please scroll to the bottom of the page, expand the <em>Add a new cloud</em> list, and select <em>Kubernetes</em>. A new set of fields will appear. Type <code>aegjxnode-build</code> as the name. It matches the cloud entry inside kubernetes block of our pipeline. Next, type <code>aegjxnode-build</code> as the Kubernetes Namespace. Just as with the other Kubernetes Cloud that was already defined in our Jenkins instance, the value of the Jenkins URL should be <code>http://prod-jenkins.prod:8080</code>, and the Jenkins tunnel should be set to <code>prod-jenkins-agent.prod:50000</code>.</p>
+<p><strong>Sandbox</strong></p>
+<p>To test a release:</p>
+<pre><code>TODO - refer to step above once they quit changing
+
+</code></pre>
+
+<p>TODO add verification steps</p>
+<hr />
+<h1 id="deploy-environment">Deploy Environment</h1>
+<p>One or more apps are owned by a team.  Each team has a production environment such as <code>team1-pord</code>.  The chart in the <code>helm</code> folder will reference all the apps that are required for this environment in <code>requirements.yaml</code></p>
+<h2 id="manual-deploy">Manual Deploy</h2>
+<p>Clone the environment chart and review the values.</p>
+<pre><code class="bash">git clone https://github.com/tgilkerson/team1-prod.git
+cd team1-prod
+ls -l helm
+</code></pre>
+
+<p>Verify the host address is correct in <code>helm/values.yaml</code>.</p>
+<pre><code>go-demo-5:
+  ingress:
+    host: go-demo-5.127.0.0.1.nip.io
+aegjxnode:
+  ingress:
+    host: aegjxnode.127.0.0.1.nip.io
+</code></pre>
+
+<p>Later on, we’ll use Jenkins to install (or upgrade) the Chart, so we should push the changes to GitHub.</p>
+<pre><code class="bash">git add .
+git commit -m &quot;Fix the address&quot;
+git push
+</code></pre>
+
+<p>All Helm dependencies need to be downloaded to the charts directory before they are installed. We’ll do that through the helm dependency update command. Don’t worry if some of the repositories are not reachable. You might see messages stating that Helm was unable to get an update from <code>local</code> or <code>chartmuseum</code> repositories.</p>
+<p>First lets do a manually deploy of the <code>team1-prod</code> environment.</p>
+<pre><code class="bash">cd team1-prod
+
+helm dependency update helm
+ls helm/charts/
+
+# To confirm
+ls -l helm/charts
+
+# The output should look like this
+aegjxnode-0.1.9.tgz
+go-demo-5-0.0.1.tgz
+
+# The first time
+helm install helm -n team1-prod --namespace team1-prod
+
+# Or do this the -i will install if it does not exist
+helm upgrade -i team1-prod helm --namespace team1-prod
+
+# verify
+kubectl -n team1-prod rollout status deploy team1-prod-go-demo-5
+curl go-demo-5.127.0.0.1.nip.io/demo/hello
+
+# clean up
+helm list
+helm delete team1-prod --purge
+
+</code></pre>
+
+<p><strong>Auto Deploy</strong></p>
+<p>The CI/CD pipeline will automate the manual steps above.</p>
+<hr />
+<h1 id="jeninsx">JeninsX</h1>
+<p>JenkinsX was not in the book, it is too new, however I did look into it a bit to take a look at their workflow.</p>
+<p>To install on my docker-for-windows cluster:</p>
+<p>Taken from <a href="https://jenkins-x.io/getting-started/install-on-cluster/">getting started</a></p>
+<pre><code class="bash">jx install --provider=kubernetes --on-premise
+
+Jenkins X installation completed successfully
+Your admin password is: =rvC9qvz0fq9is^Z6SwY
+
+
+--------------------------------------------------------------------------------
+
+# Utility
+
+Some utility functions and other useful stuff to help debug.
+
+```bash
+kubectl -n &lt;target-namespace&gt; run -it \
 --image ubuntu aegutil --restart=Never --rm sh
 
 # then you can...
