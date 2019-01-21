@@ -1,1 +1,1 @@
-This is my personal notes on CI/CD on Kubernetes.
+This is my personal notes Ops related stuff.

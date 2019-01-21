@@ -6,8 +6,17 @@ This repo uses [mkdocs](https://www.mkdocs.org/) ([help](https://mkdocs.readthed
 
 https://tonygilkerson.github.io/OpsDoc/
 
+**Develop:**
 
-To publish changes:
+```
+cd OpsDoc
+mkdocs serve
+# Edit content and review changes here:
+open http://127.0.0.1:8000/
+```
+
+
+**Publish:**
 
 ```
 cd OpsDoc
