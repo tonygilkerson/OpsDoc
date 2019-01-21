@@ -4,37 +4,23 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2019-01-19</lastmod>
+     <lastmod>2019-01-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
-        
     <url>
-     <loc>/cicd/create-cluster/</loc>
-     <lastmod>2019-01-19</lastmod>
+     <loc>/cicd/</loc>
+     <lastmod>2019-01-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    <url>
-     <loc>/cicd/prerequisite-setup/</loc>
-     <lastmod>2019-01-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>/cicd/util/</loc>
-     <lastmod>2019-01-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
     
 
     
     <url>
      <loc>/about/</loc>
-     <lastmod>2019-01-19</lastmod>
+     <lastmod>2019-01-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
