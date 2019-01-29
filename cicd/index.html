@@ -52,6 +52,12 @@
                         <a href="./">CI/CD</a>
                     </li>
                     <li >
+                        <a href="../mon-log-scale/">Monitoring</a>
+                    </li>
+                    <li >
+                        <a href="../ref/">Reference</a>
+                    </li>
+                    <li >
                         <a href="../about/">About</a>
                     </li>
                 </ul>
@@ -68,7 +74,7 @@
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../about/">
+                        <a rel="prev" href="../mon-log-scale/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -152,6 +158,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/mast
 <p><strong>LB_IP</strong></p>
 <p>Find your loadBalancer IP:</p>
 <p>On docker-for-windows this is <code>127.0.0.1</code>  for other cluster you can try the following:</p>
+<p><strong>Update</strong> - I think it might be better to use the IP of my laptop i.e. <code>192.168.1.164</code>.  This might make is so the pod to pod communication works.  I am not sure.  The later 2.5 book started doing this.  I keep the notes here point to the loopback interface because that is what I used but if I go back through this a second time I should try my laptop IP and if all works out update this doc.</p>
 <pre><code class="bash">kubectl -n ingress-nginx get svc ingress-nginx -o jsonpath=&quot;{.status.loadBalancer.ingress[0].hostname}&quot;
 #or
 kubectl -n ingress-nginx get svc ingress-nginx -o jsonpath=&quot;{.status.loadBalancer.ingress[0].ip}&quot;
@@ -412,9 +419,9 @@ cat Jenkinsfile
 <p>Please scroll to the bottom of the page, expand the <em>Add a new cloud</em> list, and select <em>Kubernetes</em>. A new set of fields will appear. Type <code>go-demo-5-build</code> as the name. It matches the cloud entry inside kubernetes block of our pipeline. Next, type <code>go-demo-5-build</code> as the Kubernetes Namespace. Just as with the other Kubernetes Cloud that was already defined in our Jenkins instance, the value of the Jenkins URL should be <code>http://prod-jenkins.prod:8080</code>, and the Jenkins tunnel should be set to <code>prod-jenkins-agent.prod:50000</code>.</p>
 <p><strong>Sandbox</strong></p>
 <p>To test a release:</p>
-<pre><code>SANDBOX_ADDR=&quot;go-demo-5-sandbox.$ADDR&quot;
+<pre><code class="bash">SANDBOX_ADDR=&quot;go-demo-5-sandbox.$ADDR&quot;
 
-helm install helm/go-demo-5 -n go-demo-5-sandbox --namespace go-demo-5-sandbox
+helm install helm/go-demo-5 --name go-demo-5-sandbox --namespace go-demo-5-sandbox
 
 # when done
 helm delete go-demo-5-sandbox --purge
@@ -513,7 +520,7 @@ aegjxnode-0.1.9.tgz
 go-demo-5-0.0.1.tgz
 
 # The first time
-helm install helm -n team1-prod --namespace team1-prod
+helm install helm --name team1-prod --namespace team1-prod
 
 # Or do this the -i will install if it does not exist
 helm upgrade -i team1-prod helm --namespace team1-prod
