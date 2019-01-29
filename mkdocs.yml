@@ -3,6 +3,8 @@ site_author: Tony Gilkerson
 pages:
   - Home: index.md
   - CI/CD: cicd.md
+  - Monitoring: mon-log-scale.md
+  - Reference: ref.md
   # - CI/CD:
   #   - Create Cluster: cicd/create-cluster.md
   #   - Prerequisite Setup: cicd/prerequisite-setup.md

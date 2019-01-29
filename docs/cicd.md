@@ -63,6 +63,8 @@ Find your loadBalancer IP:
 
 On docker-for-windows this is `127.0.0.1`  for other cluster you can try the following:
 
+**Update** - I think it might be better to use the IP of my laptop i.e. `192.168.1.164`.  This might make is so the pod to pod communication works.  I am not sure.  The later 2.5 book started doing this.  I keep the notes here point to the loopback interface because that is what I used but if I go back through this a second time I should try my laptop IP and if all works out update this doc.
+
 ```bash
 kubectl -n ingress-nginx get svc ingress-nginx -o jsonpath="{.status.loadBalancer.ingress[0].hostname}"
 #or
@@ -383,10 +385,10 @@ Please scroll to the bottom of the page, expand the *Add a new cloud* list, and 
 
 To test a release:
 
-```
+```bash
 SANDBOX_ADDR="go-demo-5-sandbox.$ADDR"
 
-helm install helm/go-demo-5 -n go-demo-5-sandbox --namespace go-demo-5-sandbox
+helm install helm/go-demo-5 --name go-demo-5-sandbox --namespace go-demo-5-sandbox
 
 # when done
 helm delete go-demo-5-sandbox --purge
@@ -516,7 +518,7 @@ aegjxnode-0.1.9.tgz
 go-demo-5-0.0.1.tgz
 
 # The first time
-helm install helm -n team1-prod --namespace team1-prod
+helm install helm --name team1-prod --namespace team1-prod
 
 # Or do this the -i will install if it does not exist
 helm upgrade -i team1-prod helm --namespace team1-prod
