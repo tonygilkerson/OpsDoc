@@ -1,10 +1,85 @@
-# References
+# Kubernetes
 
-## Bash scripting cheatsheet
+## Docker Desktop Dashboard
+
+**Install dashboard**
+
+```bash
+#install
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+
+#open
+kubectl proxy
+open http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+```
+
+**logon**
+
+```bash
+DASH_SECRET=$(kubectl get serviceAccounts -o jsonpath="{.items[0].secrets[0].name}")
+
+# cut/past the token shown form this command
+kubectl describe secrets/$DASH_SECRET
+```
+
+**charts and graphs**
+
+This stuff is optional but will make charts and graphs show up in the dashboard.
+```bash  
+kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
+```
+
+**Heapster workaround:**
+
+I got an error where heapster could not connect so I had to edit the `--source` value for the deployment as shown below
+
+```
+{
+  "kind": "Deployment",
+  "apiVersion": "extensions/v1beta1",
+  "metadata": {
+    "name": "heapster",
+    "namespace": "kube-system",
+    ...,
+        "spec": {
+        "containers": [
+          {
+            ...
+            "command": [
+              "/heapster",
+====>         "--source=kubernetes:https://kubernetes.default:443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true",
+              "--sink=influxdb:http://monitoring-influxdb.kube-system.svc:8086"
+            ],
+            ...
+    ...
+ }
+```
+
+For more information see:
+
+Setup:
+
+* https://github.com/kubernetes/dashboard
+* [this blog post](https://www.hanselman.com/blog/HowToSetUpKubernetesOnWindows10WithDockerForWindowsAndRunASPNETCore.aspx)
+
+Configure access:
+
+* https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui
+* https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/  
+
+
+## Kubernetes API Doc
+
+* [Kubernetes API](https://v1-9.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#-strong-api-overview-strong-)
+
+
+# Bash scripting cheatsheet
 * [Dev Hints](https://devhints.io/bash)
 
 
-## The DevOps 2.3 Toolkit: Kubernetes
+# The DevOps 2.3 Toolkit: Kubernetes
 
 * [02-minikube.sh](https://gist.github.com/vfarcic/77ca05f4d16125b5a5a5dc30a1ade7fc)
 * [03-pod.hs](https://gist.github.com/vfarcic/d860631d0dd3158c32740e9260c7add0)
@@ -20,7 +95,3 @@
 * [13-resource.sh](https://gist.github.com/vfarcic/cc8c44e1e84446dccde3d377c131a5cd)
 * [14-aws.sh](https://gist.github.com/vfarcic/04af9efcd1c972e8199fc014b030b134)
 * [15-pv.sh](https://gist.github.com/vfarcic/41c86eb385dfc5c881d910c5e98596f2)
-
-## Kubernetes APIs
-
-* [Kubernetes API](https://v1-9.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#-strong-api-overview-strong-)
