@@ -172,13 +172,23 @@
         },
         {
             "location": "/ref/",
-            "text": "References\n\n\nBash scripting cheatsheet\n\n\n\n\nDev Hints\n\n\n\n\nThe DevOps 2.3 Toolkit: Kubernetes\n\n\n\n\n02-minikube.sh\n\n\n03-pod.hs\n\n\n04-rs.sh\n\n\n05-svc.sh\n\n\n06-deploy.sh\n\n\n07-ingress.sh\n\n\n08-volume.sh\n\n\n09-config-map.sh\n\n\n10-secret.sh\n\n\n11-ns.sh\n\n\n12-auth.sh\n\n\n13-resource.sh\n\n\n14-aws.sh\n\n\n15-pv.sh\n\n\n\n\nKubernetes APIs\n\n\n\n\nKubernetes API",
+            "text": "Kubernetes\n\n\nDocker Desktop Dashboard\n\n\nInstall dashboard\n\n\n#install\nkubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml\n\n#open\nkubectl proxy\nopen http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/\n\n\n\n\nlogon\n\n\nDASH_SECRET=$(kubectl get serviceAccounts -o jsonpath=\"{.items[0].secrets[0].name}\")\n\n# cut/past the token shown form this command\nkubectl describe secrets/$DASH_SECRET\n\n\n\n\ncharts and graphs\n\n\nThis stuff is optional but will make charts and graphs show up in the dashboard.\n\n\nkubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml\nkubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml\nkubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml\n\n\n\n\nHeapster workaround:\n\n\nI got an error where heapster could not connect so I had to edit the \n--source\n value for the deployment as shown below\n\n\n{\n  \"kind\": \"Deployment\",\n  \"apiVersion\": \"extensions/v1beta1\",\n  \"metadata\": {\n    \"name\": \"heapster\",\n    \"namespace\": \"kube-system\",\n    ...,\n        \"spec\": {\n        \"containers\": [\n          {\n            ...\n            \"command\": [\n              \"/heapster\",\n====>         \"--source=kubernetes:https://kubernetes.default:443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true\",\n              \"--sink=influxdb:http://monitoring-influxdb.kube-system.svc:8086\"\n            ],\n            ...\n    ...\n }\n\n\n\n\nFor more information see:\n\n\nSetup:\n\n\n\n\nhttps://github.com/kubernetes/dashboard\n\n\nthis blog post\n\n\n\n\nConfigure access:\n\n\n\n\nhttps://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui\n\n\nhttps://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/  \n\n\n\n\nKubernetes API Doc\n\n\n\n\nKubernetes API\n\n\n\n\nBash scripting cheatsheet\n\n\n\n\nDev Hints\n\n\n\n\nThe DevOps 2.3 Toolkit: Kubernetes\n\n\n\n\n02-minikube.sh\n\n\n03-pod.hs\n\n\n04-rs.sh\n\n\n05-svc.sh\n\n\n06-deploy.sh\n\n\n07-ingress.sh\n\n\n08-volume.sh\n\n\n09-config-map.sh\n\n\n10-secret.sh\n\n\n11-ns.sh\n\n\n12-auth.sh\n\n\n13-resource.sh\n\n\n14-aws.sh\n\n\n15-pv.sh",
             "title": "Reference"
         },
         {
-            "location": "/ref/#references",
+            "location": "/ref/#kubernetes",
             "text": "",
-            "title": "References"
+            "title": "Kubernetes"
+        },
+        {
+            "location": "/ref/#docker-desktop-dashboard",
+            "text": "Install dashboard  #install\nkubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml\n\n#open\nkubectl proxy\nopen http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/  logon  DASH_SECRET=$(kubectl get serviceAccounts -o jsonpath=\"{.items[0].secrets[0].name}\")\n\n# cut/past the token shown form this command\nkubectl describe secrets/$DASH_SECRET  charts and graphs  This stuff is optional but will make charts and graphs show up in the dashboard.  kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml\nkubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml\nkubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml  Heapster workaround:  I got an error where heapster could not connect so I had to edit the  --source  value for the deployment as shown below  {\n  \"kind\": \"Deployment\",\n  \"apiVersion\": \"extensions/v1beta1\",\n  \"metadata\": {\n    \"name\": \"heapster\",\n    \"namespace\": \"kube-system\",\n    ...,\n        \"spec\": {\n        \"containers\": [\n          {\n            ...\n            \"command\": [\n              \"/heapster\",\n====>         \"--source=kubernetes:https://kubernetes.default:443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true\",\n              \"--sink=influxdb:http://monitoring-influxdb.kube-system.svc:8086\"\n            ],\n            ...\n    ...\n }  For more information see:  Setup:   https://github.com/kubernetes/dashboard  this blog post   Configure access:   https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui  https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+            "title": "Docker Desktop Dashboard"
+        },
+        {
+            "location": "/ref/#kubernetes-api-doc",
+            "text": "Kubernetes API",
+            "title": "Kubernetes API Doc"
         },
         {
             "location": "/ref/#bash-scripting-cheatsheet",
@@ -189,11 +199,6 @@
             "location": "/ref/#the-devops-23-toolkit-kubernetes",
             "text": "02-minikube.sh  03-pod.hs  04-rs.sh  05-svc.sh  06-deploy.sh  07-ingress.sh  08-volume.sh  09-config-map.sh  10-secret.sh  11-ns.sh  12-auth.sh  13-resource.sh  14-aws.sh  15-pv.sh",
             "title": "The DevOps 2.3 Toolkit: Kubernetes"
-        },
-        {
-            "location": "/ref/#kubernetes-apis",
-            "text": "Kubernetes API",
-            "title": "Kubernetes APIs"
         },
         {
             "location": "/about/",

@@ -86,20 +86,83 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#references">References</a></li>
-            <li><a href="#bash-scripting-cheatsheet">Bash scripting cheatsheet</a></li>
-            <li><a href="#the-devops-23-toolkit-kubernetes">The DevOps 2.3 Toolkit: Kubernetes</a></li>
-            <li><a href="#kubernetes-apis">Kubernetes APIs</a></li>
+        <li class="main active"><a href="#kubernetes">Kubernetes</a></li>
+            <li><a href="#docker-desktop-dashboard">Docker Desktop Dashboard</a></li>
+            <li><a href="#kubernetes-api-doc">Kubernetes API Doc</a></li>
+        <li class="main "><a href="#bash-scripting-cheatsheet">Bash scripting cheatsheet</a></li>
+        <li class="main "><a href="#the-devops-23-toolkit-kubernetes">The DevOps 2.3 Toolkit: Kubernetes</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="references">References</h1>
-<h2 id="bash-scripting-cheatsheet">Bash scripting cheatsheet</h2>
+<h1 id="kubernetes">Kubernetes</h1>
+<h2 id="docker-desktop-dashboard">Docker Desktop Dashboard</h2>
+<p><strong>Install dashboard</strong></p>
+<pre><code class="bash">#install
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+
+#open
+kubectl proxy
+open http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+</code></pre>
+
+<p><strong>logon</strong></p>
+<pre><code class="bash">DASH_SECRET=$(kubectl get serviceAccounts -o jsonpath=&quot;{.items[0].secrets[0].name}&quot;)
+
+# cut/past the token shown form this command
+kubectl describe secrets/$DASH_SECRET
+</code></pre>
+
+<p><strong>charts and graphs</strong></p>
+<p>This stuff is optional but will make charts and graphs show up in the dashboard.</p>
+<pre><code class="bash">kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
+</code></pre>
+
+<p><strong>Heapster workaround:</strong></p>
+<p>I got an error where heapster could not connect so I had to edit the <code>--source</code> value for the deployment as shown below</p>
+<pre><code>{
+  &quot;kind&quot;: &quot;Deployment&quot;,
+  &quot;apiVersion&quot;: &quot;extensions/v1beta1&quot;,
+  &quot;metadata&quot;: {
+    &quot;name&quot;: &quot;heapster&quot;,
+    &quot;namespace&quot;: &quot;kube-system&quot;,
+    ...,
+        &quot;spec&quot;: {
+        &quot;containers&quot;: [
+          {
+            ...
+            &quot;command&quot;: [
+              &quot;/heapster&quot;,
+====&gt;         &quot;--source=kubernetes:https://kubernetes.default:443?useServiceAccount=true&amp;kubeletHttps=true&amp;kubeletPort=10250&amp;insecure=true&quot;,
+              &quot;--sink=influxdb:http://monitoring-influxdb.kube-system.svc:8086&quot;
+            ],
+            ...
+    ...
+ }
+</code></pre>
+
+<p>For more information see:</p>
+<p>Setup:</p>
+<ul>
+<li>https://github.com/kubernetes/dashboard</li>
+<li><a href="https://www.hanselman.com/blog/HowToSetUpKubernetesOnWindows10WithDockerForWindowsAndRunASPNETCore.aspx">this blog post</a></li>
+</ul>
+<p>Configure access:</p>
+<ul>
+<li>https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui</li>
+<li>https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/  </li>
+</ul>
+<h2 id="kubernetes-api-doc">Kubernetes API Doc</h2>
+<ul>
+<li><a href="https://v1-9.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#-strong-api-overview-strong-">Kubernetes API</a></li>
+</ul>
+<h1 id="bash-scripting-cheatsheet">Bash scripting cheatsheet</h1>
 <ul>
 <li><a href="https://devhints.io/bash">Dev Hints</a></li>
 </ul>
-<h2 id="the-devops-23-toolkit-kubernetes">The DevOps 2.3 Toolkit: Kubernetes</h2>
+<h1 id="the-devops-23-toolkit-kubernetes">The DevOps 2.3 Toolkit: Kubernetes</h1>
 <ul>
 <li><a href="https://gist.github.com/vfarcic/77ca05f4d16125b5a5a5dc30a1ade7fc">02-minikube.sh</a></li>
 <li><a href="https://gist.github.com/vfarcic/d860631d0dd3158c32740e9260c7add0">03-pod.hs</a></li>
@@ -115,10 +178,6 @@
 <li><a href="https://gist.github.com/vfarcic/cc8c44e1e84446dccde3d377c131a5cd">13-resource.sh</a></li>
 <li><a href="https://gist.github.com/vfarcic/04af9efcd1c972e8199fc014b030b134">14-aws.sh</a></li>
 <li><a href="https://gist.github.com/vfarcic/41c86eb385dfc5c881d910c5e98596f2">15-pv.sh</a></li>
-</ul>
-<h2 id="kubernetes-apis">Kubernetes APIs</h2>
-<ul>
-<li><a href="https://v1-9.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#-strong-api-overview-strong-">Kubernetes API</a></li>
 </ul></div>
         </div>
 
