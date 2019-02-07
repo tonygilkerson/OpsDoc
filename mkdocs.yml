@@ -2,16 +2,11 @@ site_name: AEG Ops Doc
 site_author: Tony Gilkerson
 pages:
   - Home: index.md
-  - CI/CD: cicd.md
   - Monitoring: mon-log-scale.md
-  - Reference: ref.md
-  # - CI/CD:
-  #   - Create Cluster: cicd/create-cluster.md
-  #   - Prerequisite Setup: cicd/prerequisite-setup.md
-  #   - Utility: cicd/util.md
+  - CI/CD::
+    - Toolkit 2.4 CI/CD: cicd/cicd-toolkit24.md
+    - Toolkit 2.6 JenkinX: cicd/jx-toolkit26.md
+    - JenkinsX Accelerate Deck: cicd/jx-accelerate-deck.md
   - About: about.md
-  # - Example Grouping 1:
-  #   - Sub page1: grp1/page1.md
-  #   - Sub page2: grp1/page2.md
-  #   - Sub page3: grp1/page3.md
+  - Reference: ref.md
 #theme: readthedocs
