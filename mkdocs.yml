@@ -6,7 +6,9 @@ pages:
   - CI/CD::
     - Toolkit 2.4 CI/CD: cicd/cicd-toolkit24.md
     - Toolkit 2.6 JenkinX: cicd/jx-toolkit26.md
-    - JenkinsX Accelerate Deck: cicd/jx-accelerate-deck.md
+  - Decks::
+    - Jenkins X Accelerate Deck: cicd/jx-accelerate-deck.md
+    - Jenkins X m2 intro: jx-m2-intro.md
   - About: about.md
   - Reference: ref.md
 #theme: readthedocs

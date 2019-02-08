@@ -21,7 +21,7 @@ See "Manually install prerequisites (Kindle Location 99)" for more detail:
 
 **GitBash tweak**
 
-To get the `gcloud` command to work in gitbash I had to add python to the path.  If this does not work you can try just running the command in PS.
+To get the `gcloud` command to work in gitbash I had to add python to the path.  If this does not work you can try just running the command in PowerShell.
 
 ```bash
 cd

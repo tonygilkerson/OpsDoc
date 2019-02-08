@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Tony Gilkerson">
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Accelerate Deck - AEG Ops Doc</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">AEG Ops Doc</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../../mon-log-scale/">Monitoring</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">CI/CD: <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li >
+    <a href="../../cicd/cicd-toolkit24/">Toolkit 2.4 CI/CD</a>
+</li>
+                                    
+<li >
+    <a href="../../cicd/jx-toolkit26/">Toolkit 2.6 JenkinX</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Decks: <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li >
+    <a href="../../cicd/jx-accelerate-deck.md">Jenkins X Accelerate Deck</a>
+</li>
+                                    
+<li >
+    <a href="../../jx-m2-intro.md">Jenkins X m2 intro</a>
+</li>
+                                </ul>
+                            </li>
+                            <li >
+                                <a href="../../about/">About</a>
+                            </li>
+                            <li >
+                                <a href="../../ref/">Reference</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#accelerate-deck">Accelerate Deck</a></li>
+        <li class="main "><a href="#7-capabilities-of-jenkins-x">7 Capabilities of Jenkins X</a></li>
+        <li class="main "><a href="#how-does-jenkins-x-help">How does Jenkins X help?</a></li>
+        <li class="main "><a href="#installing-jenkins-x">Installing Jenkins X</a></li>
+        <li class="main "><a href="#what-does-that-give-me">What does that give me?</a></li>
+        <li class="main "><a href="#importing-and-creating-projects">Importing and Creating Projects</a></li>
+        <li class="main "><a href="#what-you-get-from-a-quickstart">What you get from a quickstart</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="accelerate-deck">Accelerate Deck</h1>
+<p>This section contains the notes taken while watching the  <a href="https://www.youtube.com/watch?v=u4kyipOT44A">Accelerate your CI/CD on Kubernetes with Jenkins X (James Strachan)</a></p>
+<p>James Strachan recommends this book and says Jenkins X tries to adopt many of the principles in this book: <a href="https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339">Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations</a></p>
+<hr />
+<h1 id="7-capabilities-of-jenkins-x">7 Capabilities of Jenkins X</h1>
+<p>Taken from the book here are 7 practices of high performing teams. Jenkins X uses open source software to automate these practices.   </p>
+<p><strong>1. Use version control for all artifacts</strong></p>
+<ul>
+<li>source code and code (IaC)</li>
+<li>when things go bad we can revert</li>
+<li>provides an audit trail</li>
+</ul>
+<p><strong>2. Use trunk-based development</strong></p>
+<ul>
+<li>developers collaborate on code in a single branch called 'trunk'. They therefore avoid merge hell, do not break the build, and live happily ever after.</li>
+<li>the use of long-lived featured branches is associated with low performing teams</li>
+<li>trunk-based development is associated with high performing teams</li>
+</ul>
+<p><strong>6. Use loosely coupled architecture</strong></p>
+<ul>
+<li>High performing teams use the cloud well  to deliver highly available, multi-az deployments that are self healing and auto scaling.</li>
+<li>microservices allows teams to move quicker; many <em>independent</em> teams can move quicker than one large team.</li>
+<li>Kubernetes is ideal for running microservices.  <ul>
+<li>runs everywhere while providing a consistent abstraction across all cloud providers</li>
+<li>a single way to package applications and run them in any cloud (or on premise)!</li>
+<li>multi cloud is now achievable by mortals</li>
+</ul>
+</li>
+<li>challenge: teams now need to figure out how to do many things well; microservices, cloud, Kubernetes, CI/CD, etc.. this is where Jenkins X comes in</li>
+</ul>
+<p><strong>3. Implement continuous integration (CI)</strong></p>
+<p><strong>4. Implement continuous delivery (CD)</strong></p>
+<p><strong>5. Automate your deployment process</strong></p>
+<p><strong>7. Architect for empowered teams</strong></p>
+<hr />
+<h1 id="how-does-jenkins-x-help">How does Jenkins X help?</h1>
+<p><strong>Automates the setup of your tools +environments</strong></p>
+<ul>
+<li>Jenkins, helm, skaffold, nexus, monocular</li>
+</ul>
+<p><strong>Automates the CI/CD for your application on Kubernetes</strong></p>
+<ul>
+<li>Docker images</li>
+<li>Helm charts</li>
+<li>Jenkins Pipelines</li>
+</ul>
+<p><strong>Uses GitOps to manage promotion between environments</strong></p>
+<ul>
+<li>Test -&gt; Staging -&gt; Production</li>
+<li>use git as the source of truth for each environment;</li>
+<li>e.g. a prod repo will list all the microservices, the version of each and any environment specific configuration running in the prod environment</li>
+<li>could use <code>kubectl</code> to promote code to various environments but no one can see what you are doing, reverting back is not as easy and it is dangerous especially when you are trying to move fast.</li>
+<li>to promote between environments we use a PR. The team can code review/approve coding as well as configuration changes.</li>
+<li>An approved PR tells the team what is in prod and when it was installed.  And, if things go bad, just revert the PR to roll back.</li>
+</ul>
+<p><strong>Lots of feedback</strong></p>
+<ul>
+<li>E.g. commenting on issues as they hit Staging + Production</li>
+</ul>
+<hr />
+<h1 id="installing-jenkins-x">Installing Jenkins X</h1>
+<p><strong>Install the jx binary</strong></p>
+<pre><code>https://jenkins-x.io/geting-started/install/
+</code></pre>
+
+<p><strong>Createa new k8scluster on GKE</strong></p>
+<pre><code class="bash">$ jx create cluster gke
+</code></pre>
+
+<p>As of now, supported clouds:</p>
+<ul>
+<li>create cluster aks Create a new Kubernetes cluster on AKS: Runs on Azure</li>
+<li>create cluster aws Create a new Kubernetes cluster on AWS with kops</li>
+<li>create cluster eks Create a new Kubernetes cluster on AWS using EKS</li>
+<li>create cluster gke Create a new Kubernetes cluster on GKE: Runs on Google Cloud</li>
+<li>create cluster iks Create a new kubernetes cluster on IBM Cloud Kubernetes Services</li>
+<li>create cluster minikube Create a new Kubernetes cluster with Minikube: Runs locally</li>
+<li>create cluster minishift Create a new OpenShift cluster with Minishift: Runs locally</li>
+<li>create cluster oke Create a new Kubernetes cluster on OKE: Runs on Oracle Cloud</li>
+</ul>
+<p><strong>Install Jenkins X on an existing cluster</strong></p>
+<pre><code class="bash">$ jx install --provider=...
+</code></pre>
+
+<hr />
+<h1 id="what-does-that-give-me">What does that give me?</h1>
+<p><strong>Each team gets their own:</strong></p>
+<ul>
+<li>Development tools environment<ul>
+<li>Jenkins master</li>
+<li>Elastic pool of Kubernetes build pods</li>
+<li>Nexus + Monocular (helm application store)</li>
+</ul>
+</li>
+<li>Staging environment</li>
+<li>Production environment</li>
+</ul>
+<p><strong>Also...</strong></p>
+<ul>
+<li>This empowers each team to work independently and release when they want</li>
+<li>Can configure more environments but out-of-the-box you get one staging and one production environment.</li>
+<li>A new version is released for each PR merged to 'trunk'</li>
+<li>Each release is automatically promoted to staging but requires a manual step to promote to production by default.  This can be changed for 100% automation.</li>
+</ul>
+<hr />
+<h1 id="importing-and-creating-projects">Importing and Creating Projects</h1>
+<p><strong>Import existing</strong></p>
+<p>If you already have some code.</p>
+<pre><code class="bash">$ jx import
+</code></pre>
+
+<p><strong>Create new applications from quickstarts</strong></p>
+<p>This is preferred so you know everything is setup correctly. The import works but you never know.</p>
+<pre><code class="bash">$ jx create quickstart
+</code></pre>
+
+<ul>
+<li>there are a bunch of quick starts they are open source so you can check them out <a href="https://github.com/jenkins-x-quickstarts">here</a></li>
+<li>There is one for most of the popular development platforms</li>
+<li>You can create a custom template if you like</li>
+</ul>
+<p><strong>Create new Spring Boot applications</strong></p>
+<pre><code class="bash">$ jx create spring
+</code></pre>
+
+<h1 id="what-you-get-from-a-quickstart">What you get from a quickstart</h1>
+<p><code>jx create</code> will...</p>
+<ul>
+<li>Create a project repo GitHub</li>
+<li>Create a dockerfile</li>
+<li>Create a helm chart</li>
+<li>Create environment repos in GitHub (staging and production)</li>
+<li>Setup all the webhooks in GitHub</li>
+<li>Setup all your CI/CD (Jenkins pipelines)</li>
+</ul></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
