@@ -8,7 +8,7 @@ nav:
     - Toolkit 2.6 JenkinX: cicd/jx-toolkit26.md
   - Decks::
     - Jenkins X Accelerate Deck: decks/jx-accelerate-deck.md
-    - Jenkins X m2 intro: decks/jx-m2-intro.md
+    - Jenkins X m2 intro: decks/jx-intro/jx-intro.md
   - About: about.md
   - Reference: ref.md
 #theme: readthedocs

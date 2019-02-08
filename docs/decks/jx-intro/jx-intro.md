@@ -1,9 +1,23 @@
-# Jenkins X Intro
+# Introduction
 
-Based on the book: [Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com](https://leanpub.com/the-devops-2-6-toolkit)
+**quote:**
+>Armed with `robust data-gathering and statistical analysis` techniques, we have been able to discover significant results while working on the State of DevOps Report. We’ve been able to measure and quantify software delivery performance, its impact on organizational performance, and the various capabilities that contribute to these outcomes. 
 
-Commands reference from the book: [02-intro.sh](https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80)
---------------------------------------------------------------------------------
+.
+> The key to successful change is measuring and understanding the right things `with a focus on capabilities`—not on maturity.
+
+.
+> The findings from our research program show clearly that the value of adopting DevOps is even larger than we had initially thought, `and the gap between high and low performers continues to grow`.
+
+
+**Quotes**
+
+* Quotes above from the book: [Forsgren PhD, Nicole. Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations](https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339)
+* Many ideas presented here are based on the principles in this book.
+* Also technical details presented here are based on the book: [Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com](https://leanpub.com/the-devops-2-6-toolkit) and  [02-intro.sh](https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80)
+
+---
+
 # Create Cluster
 
 ## Prerequisite Tools
@@ -70,6 +84,31 @@ jx create cluster gke \
 
 ```
 
+--------------------------------------------------------------------------------
+
+# Quickstart Project
+
+Create a sample project to see how things work. Commands for this section have been adapted from the book: [03-quickstart.sh](https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5)
+
+**Create Cluster**
+
+Create a cluster as we did before, see [Create Cluster](#create-cluster)
+
+
+## Create project
+
+```bash
+QS_PROJECT="jxqsMMDD" # change this as needed
+
+jx create quickstart -l go -p $QS_PROJECT -b
+jx get activities
+```
+
+
+--------------------------------------------------------------------------------
+
+# Cleanup
+
 ## Destroy Cluster
 
 Remove the cluster and everything else.
@@ -93,32 +132,11 @@ gcloud compute disks delete \
     --format="value(id)")
 ```
 
-# Quickstart Project
-
-Create a sample project to see how things work. Commands for this section have been adapted from the book: [03-quickstart.sh](https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5)
-
-**Create Cluster**
-
-Create a cluster as we did before, see [Create Cluster](#create-cluster)
-
-
-## Create project
-
-```bash
-QS_PROJECT="jxqsMMDD" # change this as needed
-
-jx create quickstart -l go -p $QS_PROJECT -b
-jx get activities
-```
-
 ## Cleanup project
-
-[Destroy Cluster](#destroy-cluster) as we did before.  Then cleanup the quickstart app:
 
 ```bash
 hub delete -y $GH_USER/$QS_PROJECT
 
-# TODO need to verify
 cd ..
 rm -rf $QS_PROJECT
 
