@@ -8,7 +8,7 @@
         <meta name="author" content="Tony Gilkerson">
         
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>Toolkit 2.6 JenkinX - AEG Ops Doc</title>
+        <title>Jenkins X m2 intro - AEG Ops Doc</title>
         <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../../css/font-awesome.min.css" rel="stylesheet">
         <link href="../../css/base.css" rel="stylesheet">
@@ -52,29 +52,29 @@
                             <li >
                                 <a href="../../mon-log-scale/">Monitoring</a>
                             </li>
-                            <li class="dropdown active">
+                            <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">CI/CD: <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li >
-    <a href="../cicd-toolkit24/">Toolkit 2.4 CI/CD</a>
+    <a href="../../cicd/cicd-toolkit24/">Toolkit 2.4 CI/CD</a>
 </li>
                                     
-<li class="active">
-    <a href="./">Toolkit 2.6 JenkinX</a>
+<li >
+    <a href="../../cicd/jx-toolkit26/">Toolkit 2.6 JenkinX</a>
 </li>
                                 </ul>
                             </li>
-                            <li class="dropdown">
+                            <li class="dropdown active">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Decks: <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li >
-    <a href="../../decks/jx-accelerate-deck/">Jenkins X Accelerate Deck</a>
+    <a href="../jx-accelerate-deck/">Jenkins X Accelerate Deck</a>
 </li>
                                     
-<li >
-    <a href="../../decks/jx-m2-intro/">Jenkins X m2 intro</a>
+<li class="active">
+    <a href="./">Jenkins X m2 intro</a>
 </li>
                                 </ul>
                             </li>
@@ -93,12 +93,12 @@
                             </a>
                         </li>
                             <li >
-                                <a rel="next" href="../cicd-toolkit24/">
+                                <a rel="next" href="../jx-accelerate-deck/">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li >
-                                <a rel="prev" href="../../decks/jx-accelerate-deck/">
+                                <a rel="prev" href="../../about/">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -110,22 +110,26 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#create-cluster">Create Cluster</a></li>
-            <li><a href="#install-prerequisites-tools">Install prerequisites tools</a></li>
+        <li class="main active"><a href="#jenkins-x-intro">Jenkins X Intro</a></li>
+            <li><a href="#commands-reference-from-the-book-02-introsh">Commands reference from the book: 02-intro.sh</a></li>
+        <li class="main "><a href="#create-cluster">Create Cluster</a></li>
+            <li><a href="#prerequisite-tools">Prerequisite Tools</a></li>
+            <li><a href="#jenkins-x-cli">Jenkins X CLI</a></li>
             <li><a href="#create-cluster-with-jx">Create Cluster with jx</a></li>
             <li><a href="#destroy-cluster">Destroy Cluster</a></li>
-        <li class="main "><a href="#exploring-quickstart-projects">Exploring Quickstart Projects</a></li>
+        <li class="main "><a href="#quickstart-project">Quickstart Project</a></li>
             <li><a href="#create-project">Create project</a></li>
             <li><a href="#cleanup-project">Cleanup project</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
+<h1 id="jenkins-x-intro">Jenkins X Intro</h1>
+<p>Based on the book: <a href="https://leanpub.com/the-devops-2-6-toolkit">Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com</a></p>
+<h2 id="commands-reference-from-the-book-02-introsh">Commands reference from the book: <a href="https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80">02-intro.sh</a></h2>
 <h1 id="create-cluster">Create Cluster</h1>
-<p>Notes taken form <a href="https://leanpub.com/the-devops-2-6-toolkit">Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com</a></p>
-<p>Commands for this section: <a href="https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80">02-intro.sh</a></p>
-<h2 id="install-prerequisites-tools">Install prerequisites tools</h2>
-<p>See "Manually install prerequisites (Kindle Location 99)" for more detail:</p>
+<h2 id="prerequisite-tools">Prerequisite Tools</h2>
+<p>It is up to you to figure out how to install the following tools.  The general approach is to go to the source and follow their instruction. In other cases <code>brew</code> will work.</p>
 <ul>
 <li>git (and gitbash)</li>
 <li>kubectl</li>
@@ -135,13 +139,11 @@
 <li>Azure CLI (for AKS)</li>
 <li>jq</li>
 <li>hub</li>
-<li>jenkins-x</li>
 </ul>
-<p><strong>GitBash tweak</strong></p>
-<p>To get the <code>gcloud</code> command to work in gitbash I had to add python to the path.  If this does not work you can try just running the command in PowerShell.</p>
-<pre><code class="bash">cd
-echo &quot;export PATH=$PATH:/c/Python27&quot; &gt;&gt; .bashrc
-# open a new shell
+<h2 id="jenkins-x-cli">Jenkins X CLI</h2>
+<p>For macOS:</p>
+<pre><code class="bash">brew tap jenkins-x/jx
+brew install jx
 </code></pre>
 
 <h2 id="create-cluster-with-jx">Create Cluster with jx</h2>
@@ -154,10 +156,9 @@ echo &quot;export PATH=$PATH:/c/Python27&quot; &gt;&gt; .bashrc
 <p><strong>Create the cluster</strong></p>
 <pre><code class="bash"># If GKE
 PROJECT=&quot;aeg-jenkinsx&quot;
-JX_ENV=&quot;jxeMMDD&quot; # this changes each time
+JX_ENV=&quot;jxeMMDD&quot; # change this each as needed
 
-# If GKE (note winpty is needed for gitbash)
-winpty jx create cluster gke \
+jx create cluster gke \
     -n $JX_ENV \
     -p $PROJECT \
     -z us-east1-b \
@@ -166,12 +167,23 @@ winpty jx create cluster gke \
     --max-num-nodes 5 \
     --default-admin-password aegadmin \
     --default-environment-prefix $JX_ENV \
-    --preemptible=true # why not I am just testing
+    --preemptible=true  # if testing
+
+# The browser will open so you can authenticate with google cloud
+# Then you will be prompted for a few things, here are my responses:
+
+? Would you like to access Google Cloud Storage / Google Container Registry? Yes
+? Would you like to enable Cloud Build, Container Registry &amp; Container Analysis APIs? No
+? Would you like to enable Kaniko for building container images No     
+? No existing ingress controller found in the kube-system namespace, shall we install one? Yes
+? A local Jenkins X versions repository already exists, recreate with latest? Yes
+? Domain 34.73.130.212.nip.io
+
 </code></pre>
 
 <h2 id="destroy-cluster">Destroy Cluster</h2>
 <p>Remove the cluster and everything else.</p>
-<pre><code class="bash">GH_USER=&quot;tonygilkerson&quot;
+<pre><code class="bash">GH_USER=&quot;tgilkerson&quot;
 
 hub delete -y $GH_USER/environment-$JX_ENV-staging
 hub delete -y $GH_USER/environment-$JX_ENV-production
@@ -179,27 +191,25 @@ hub delete -y $GH_USER/environment-$JX_ENV-production
 rm -rf ~/.jx/environments/$GH_USER/environment-$JX_ENV-*
 rm -f ~/.jx/jenkinsAuth.yaml
 
-# for gcp
-# Note for gitbash I needed to use winpty and add '.cmd' to the end of gcloud
-winpty gcloud.cmd container clusters delete $JX_ENV --zone us-east1-b
+gcloud container clusters delete $JX_ENV --zone us-east1-b
 
 
 # remove unused disks
-winpty gcloud.cmd compute disks delete \
+gcloud compute disks delete \
     $(gcloud compute disks list \
     --filter=&quot;-users:*&quot; \
     --format=&quot;value(id)&quot;)
 </code></pre>
 
-<h1 id="exploring-quickstart-projects">Exploring Quickstart Projects</h1>
-<p>Create a sample project to see how things work.</p>
-<p>Commands for this section: <a href="https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5">03-quickstart.sh</a></p>
-<p><strong>Prerequisites</strong></p>
+<h1 id="quickstart-project">Quickstart Project</h1>
+<p>Create a sample project to see how things work. Commands for this section have been adapted from the book: <a href="https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5">03-quickstart.sh</a></p>
+<p><strong>Create Cluster</strong></p>
 <p>Create a cluster as we did before, see <a href="#create-cluster">Create Cluster</a></p>
 <h2 id="create-project">Create project</h2>
 <pre><code class="bash">QS_PROJECT=&quot;jxqsMMDD&quot; # change this as needed
 
-winpty jx create quickstart -l go -p $QS_PROJECT -b
+jx create quickstart -l go -p $QS_PROJECT -b
+jx get activities
 </code></pre>
 
 <h2 id="cleanup-project">Cleanup project</h2>
