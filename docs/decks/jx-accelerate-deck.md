@@ -24,7 +24,7 @@ Taken from the book here are 7 practices of high performing teams. Jenkins X use
 
 **6. Use loosely coupled architecture**
 
-* High performing teams use the cloud well  to deliver highly available, multi-az deployments that are self healing and auto scaling.
+* High performing teams use the cloud well to deliver highly available, multi-az deployments that are self healing and auto scaling.
 * microservices allows teams to move quicker; many *independent* teams can move quicker than one large team.
 * Kubernetes is ideal for running microservices.  
     * runs everywhere while providing a consistent abstraction across all cloud providers
