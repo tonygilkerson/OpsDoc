@@ -45,10 +45,31 @@
     * Environments (PR preview, Staging, Production)
 * **Day 2** - Ongoing support and maintenance after going live
     * Monitoring, Alerting, Metrics, Visibility, SLOs/SLAs, etc...
-    * Upgrades and patching
+    * Change Mange Management; Upgrades, patching, etc...
     * Operations Management (on call support)
 
+# Change Management
+
+Change is best when it is small and frequent. Our approach is to build a stead pipeline of low-risk changes coupled with automatic testing of smaller changes and reliable rollback of bad changes.  The critical interaction between change and reliability has lead us to the following change management approach:
+
+* Automated continuous integration (CI) for each pull request (PR) with review.
+    * Code review on each (PR)
+    * Automatic creation of preview environment. Especially useful for UI reviews
+* Automated continuous delivery (CD) for each PR accepted
+    * New software release automatically deployed to staging environment
+    * higher-risk changes or those unable to be validated by  automatic means are vetted by human testers
+* Gated deployment to production environment
+    * The software verified in staging is promoted to production.
+    * There is no rebuild, the same binaries and dependancies tested in staging are promoted to production
+    * All product source code and configuration as well as dependancies and their version is in source control and included in the release
+* Gated rollback if needed
+    * Preference is to quickly deploy a fix release if production is found
+    * If rollback is needed the PR is simply reverted in source control. The reverted PR will result in previous release being deployed into production
+    * Full audit of activities in source control
+
+
 ---
+
 
 # Deployment Platform
 
@@ -122,6 +143,8 @@ Taken from the Accelerate book here are 7 practices of high performing teams. Je
 --------------------------------------------------------------------------------
 
 # How does Jenkins X help?
+
+![](img/jx-gitops-flow.png)
 
 **Automates the setup of your tools + environments**
 
