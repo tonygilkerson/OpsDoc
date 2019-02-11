@@ -118,10 +118,10 @@
         <li class="main "><a href="#software-delivery">Software Delivery</a></li>
         <li class="main "><a href="#change-management">Change Management</a></li>
         <li class="main "><a href="#deployment-platform">Deployment Platform</a></li>
-        <li class="main "><a href="#jenkins-x">Jenkins X</a></li>
-            <li><a href="#7-capabilities-of-jenkins-x">7 Capabilities of Jenkins X</a></li>
+        <li class="main "><a href="#development-tools">Development Tools</a></li>
         <li class="main "><a href="#how-does-jenkins-x-help">How does Jenkins X help?</a></li>
         <li class="main "><a href="#jenkins-x-overview">Jenkins X Overview</a></li>
+            <li><a href="#gitflow">GitFlow</a></li>
         <li class="main "><a href="#what-does-that-give-me">What does that give me?</a></li>
         <li class="main "><a href="#importing-and-creating-projects">Importing and Creating Projects</a></li>
         <li class="main "><a href="#what-you-get-from-a-quickstart">What you get from a quickstart</a></li>
@@ -129,7 +129,7 @@
             <li><a href="#prerequisite-tools">Prerequisite Tools</a></li>
             <li><a href="#create-cluster-with-jx">Create Cluster with jx</a></li>
         <li class="main "><a href="#create-quickstart-project">Create Quickstart Project</a></li>
-            <li><a href="#create-project">Create project</a></li>
+            <li><a href="#create-project-demo">Create project demo</a></li>
         <li class="main "><a href="#cleanup">Cleanup</a></li>
             <li><a href="#destroy-cluster">Destroy Cluster</a></li>
             <li><a href="#cleanup-project">Cleanup project</a></li>
@@ -182,7 +182,7 @@
 </li>
 <li><strong>CI/CD</strong><ul>
 <li>Auto-scaling CI/CD runners</li>
-<li>GitOps/IaC that is Cloud Neutral (same process for AWS, Azure, GCP or on-premise)</li>
+<li>GitOps/IaC that is <strong>Cloud Neutral</strong> (same process for AWS, Azure, GCP or on-premise)</li>
 <li>Environments (PR preview, Staging, Production)</li>
 </ul>
 </li>
@@ -212,10 +212,10 @@
 <li>All product source code and configuration as well as dependancies and their version is in source control and included in the release</li>
 </ul>
 </li>
-<li>Gated rollback if needed<ul>
-<li>Preference is to quickly deploy a fix release if production is found</li>
-<li>If rollback is needed the PR is simply reverted in source control. The reverted PR will result in previous release being deployed into production</li>
-<li>Full audit of activities in source control</li>
+<li>Gated rollback (if needed)<ul>
+<li>Preference is to "fix forward" by quickly deploy a patch release</li>
+<li>Revert PR if rollback is needed. This will the previous release into production</li>
+<li>Full audit of deployment/rollback activities in source control</li>
 </ul>
 </li>
 </ul>
@@ -260,9 +260,8 @@
 <li><strong>Infrastructure (GCP)</strong> - Public cloud or in-premises infrastructure. GCP, AWS, Azure, etc..  </li>
 </ul>
 <hr />
-<h1 id="jenkins-x">Jenkins X</h1>
-<h2 id="7-capabilities-of-jenkins-x">7 Capabilities of Jenkins X</h2>
-<p>Taken from the Accelerate book here are 7 practices of high performing teams. Jenkins X uses open source software to automate these practices.   </p>
+<h1 id="development-tools">Development Tools</h1>
+<p>Taken from the <em>Accelerate</em> book here are 7 practices of high performing teams. Jenkins X uses open source software to automate these practices.   </p>
 <p><strong>1. Use version control for all artifacts</strong></p>
 <ul>
 <li>source code and code (IaC)</li>
@@ -293,7 +292,6 @@
 <p><strong>7. Architect for empowered teams</strong></p>
 <hr />
 <h1 id="how-does-jenkins-x-help">How does Jenkins X help?</h1>
-<p><img alt="" src="../img/jx-gitops-flow.png" /></p>
 <p><strong>Automates the setup of your tools + environments</strong></p>
 <ul>
 <li>Jenkins, helm, skaffold, nexus, monocular</li>
@@ -324,6 +322,20 @@
 </ul>
 <hr />
 <h1 id="jenkins-x-overview">Jenkins X Overview</h1>
+<p>Developers who do not want to know Kubernetes and its ecosystem in detail can benefit from a Jenkins X ability to simplify the processes around the software development lifecycle.</p>
+<p>Developers benefit:</p>
+<ul>
+<li>Knowledge of Kubernetes, Jenkins pipelines, Helm, not required (but helpful)</li>
+<li>Developer is up and running on a new project very quickly</li>
+<li>Makes for consistent project setups</li>
+<li>Automated CI and CD with CLI tools for code promotion</li>
+<li>Encourage experimentation -- easily create and destroy environments</li>
+<li>Empower teams -- each team can have its own set of environments if desirable</li>
+<li>Automatically spins up Preview Environments for your Pull Requests so you can get fast feedback before changes are merged to master</li>
+<li>Comments on Pull Requests with feedback as code is ready to be previewed or is promoted even if PRs are generated automatically to upgrade version</li>
+</ul>
+<h2 id="gitflow">GitFlow</h2>
+<p><img alt="" src="../img/jx-gitops-flow.png" /></p>
 <p><strong>Install the jx binary</strong></p>
 <pre><code>https://jenkins-x.io/geting-started/install/
 </code></pre>
@@ -457,10 +469,78 @@ jx create cluster gke \
 <h1 id="create-quickstart-project">Create Quickstart Project</h1>
 <p>Create a sample project to see how things work. Commands for this section have been adapted from the book: <a href="https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5">03-quickstart.sh</a></p>
 <p>Create a cluster as we did before, see <a href="#create-cluster">Create Cluster</a>. Then create the project.</p>
-<h2 id="create-project">Create project</h2>
+<h2 id="create-project-demo">Create project demo</h2>
 <pre><code class="bash">QS_PROJECT=&quot;jxqsMMDD&quot; # change this as needed
 
 jx create quickstart -l go -p $QS_PROJECT -b
+
+jx get build logs
+# watch as it:
+#   - builds the app
+#   - does a docker build
+#   - push image to docker repo
+#   - generate a change log and publish to chart repo
+#   - Jenkins pipeline will watch for a PR to get merged and deploy to staging
+jx get apps
+# shows app/version running in staging
+
+jx open --env staging
+# Shows the url to the app in staging
+
+# Now lets fix a bug
+cd $QS_PROJECT
+
+# Create an issue
+jx create issue -t &quot;Demo fix bug123&quot;
+
+# Fix issue
+git checkout -b bug123
+#TODO need steps for to edit main js file
+
+git add src
+git commit -a -m &quot;Demo fix bug123&quot;
+git psh origin bug123
+hub pull-request
+# add comment and create PR
+# go to github and watch status
+# you will see a comment that preview environment was created
+# click the link in the comment to preview your change  
+
+jx env  
+# you should see the preview environment
+# it exists as long as the PR is open
+
+# go to github and commit the PR
+# this will trigger a CD build
+
+jx get build logs
+# watch the cd build
+
+jx get apps
+# - now we should see version 0.0.2 has been deployed
+# - we should also see a release in github
+#   the release has our issue comments documented in the changes section
+# - the issue in github was also updated
+# - now we should see changes in the staging environment
+
+jx promote --version v0.0.2 --env production --timeout 1h
+# after UAT we can promote our changes to production
+
+jx get apps
+# now we see v0.0.2 in production
+
+jx env
+# select production
+jx open
+# use URL to view production
+
+# now go to ocular (TODO need URL)
+# we should see our app and could do ad-hoc install in
+# some other environment (or locally) if we wanted
+
+
+
+# TODO find a good place in the demo to show activities
 jx get activities
 </code></pre>
 
