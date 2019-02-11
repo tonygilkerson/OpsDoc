@@ -41,7 +41,7 @@
     * Testing, Development and Promotion tools
 * **CI/CD**
     * Auto-scaling CI/CD runners
-    * GitOps/IaC that is Cloud Neutral (same process for AWS, Azure, GCP or on-premise)
+    * GitOps/IaC that is **Cloud Neutral** (same process for AWS, Azure, GCP or on-premise)
     * Environments (PR preview, Staging, Production)
 * **Day 2** - Ongoing support and maintenance after going live
     * Monitoring, Alerting, Metrics, Visibility, SLOs/SLAs, etc...
@@ -62,10 +62,10 @@ Change is best when it is small and frequent. Our approach is to build a stead p
     * The software verified in staging is promoted to production.
     * There is no rebuild, the same binaries and dependancies tested in staging are promoted to production
     * All product source code and configuration as well as dependancies and their version is in source control and included in the release
-* Gated rollback if needed
-    * Preference is to quickly deploy a fix release if production is found
-    * If rollback is needed the PR is simply reverted in source control. The reverted PR will result in previous release being deployed into production
-    * Full audit of activities in source control
+* Gated rollback (if needed)
+    * Preference is to "fix forward" by quickly deploy a patch release
+    * Revert PR if rollback is needed. This will the previous release into production
+    * Full audit of deployment/rollback activities in source control
 
 
 ---
@@ -104,11 +104,9 @@ Change is best when it is small and frequent. Our approach is to build a stead p
 
 ---
 
-# Jenkins X
+# Development Tools
 
-## 7 Capabilities of Jenkins X
-
-Taken from the Accelerate book here are 7 practices of high performing teams. Jenkins X uses open source software to automate these practices.   
+Taken from the *Accelerate* book here are 7 practices of high performing teams. Jenkins X uses open source software to automate these practices.   
 
 **1. Use version control for all artifacts**
 
@@ -144,8 +142,6 @@ Taken from the Accelerate book here are 7 practices of high performing teams. Je
 
 # How does Jenkins X help?
 
-![](img/jx-gitops-flow.png)
-
 **Automates the setup of your tools + environments**
 
 * Jenkins, helm, skaffold, nexus, monocular
@@ -173,6 +169,25 @@ Taken from the Accelerate book here are 7 practices of high performing teams. Je
 ---
 
 # Jenkins X Overview
+
+Developers who do not want to know Kubernetes and its ecosystem in detail can benefit from a Jenkins X ability to simplify the processes around the software development lifecycle.
+
+Developers benefit:
+
+* Knowledge of Kubernetes, Jenkins pipelines, Helm, not required (but helpful)
+* Developer is up and running on a new project very quickly
+* Makes for consistent project setups
+* Automated CI and CD with CLI tools for code promotion
+* Encourage experimentation -- easily create and destroy environments
+* Empower teams -- each team can have its own set of environments if desirable
+* Automatically spins up Preview Environments for your Pull Requests so you can get fast feedback before changes are merged to master
+* Comments on Pull Requests with feedback as code is ready to be previewed or is promoted even if PRs are generated automatically to upgrade version
+
+
+
+## GitFlow
+
+![](img/jx-gitops-flow.png)
 
 **Install the jx binary**
 
@@ -342,12 +357,80 @@ Create a sample project to see how things work. Commands for this section have b
 Create a cluster as we did before, see [Create Cluster](#create-cluster). Then create the project.
 
 
-## Create project
+## Create project demo
 
 ```bash
 QS_PROJECT="jxqsMMDD" # change this as needed
 
 jx create quickstart -l go -p $QS_PROJECT -b
+
+jx get build logs
+# watch as it:
+#   - builds the app
+#   - does a docker build
+#   - push image to docker repo
+#   - generate a change log and publish to chart repo
+#   - Jenkins pipeline will watch for a PR to get merged and deploy to staging
+jx get apps
+# shows app/version running in staging
+
+jx open --env staging
+# Shows the url to the app in staging
+
+# Now lets fix a bug
+cd $QS_PROJECT
+
+# Create an issue
+jx create issue -t "Demo fix bug123"
+
+# Fix issue
+git checkout -b bug123
+#TODO need steps for to edit main js file
+
+git add src
+git commit -a -m "Demo fix bug123"
+git psh origin bug123
+hub pull-request
+# add comment and create PR
+# go to github and watch status
+# you will see a comment that preview environment was created
+# click the link in the comment to preview your change  
+
+jx env  
+# you should see the preview environment
+# it exists as long as the PR is open
+
+# go to github and commit the PR
+# this will trigger a CD build
+
+jx get build logs
+# watch the cd build
+
+jx get apps
+# - now we should see version 0.0.2 has been deployed
+# - we should also see a release in github
+#   the release has our issue comments documented in the changes section
+# - the issue in github was also updated
+# - now we should see changes in the staging environment
+
+jx promote --version v0.0.2 --env production --timeout 1h
+# after UAT we can promote our changes to production
+
+jx get apps
+# now we see v0.0.2 in production
+
+jx env
+# select production
+jx open
+# use URL to view production
+
+# now go to ocular (TODO need URL)
+# we should see our app and could do ad-hoc install in
+# some other environment (or locally) if we wanted
+
+
+
+# TODO find a good place in the demo to show activities
 jx get activities
 ```
 
