@@ -116,6 +116,7 @@
         <li class="main "><a href="#how-to-be-a-high-preforming-team">How to be a High Preforming Team</a></li>
             <li><a href="#approach-based-on-industry-research">Approach Based on Industry Research</a></li>
         <li class="main "><a href="#software-delivery">Software Delivery</a></li>
+        <li class="main "><a href="#change-management">Change Management</a></li>
         <li class="main "><a href="#deployment-platform">Deployment Platform</a></li>
         <li class="main "><a href="#jenkins-x">Jenkins X</a></li>
             <li><a href="#7-capabilities-of-jenkins-x">7 Capabilities of Jenkins X</a></li>
@@ -187,8 +188,34 @@
 </li>
 <li><strong>Day 2</strong> - Ongoing support and maintenance after going live<ul>
 <li>Monitoring, Alerting, Metrics, Visibility, SLOs/SLAs, etc...</li>
-<li>Upgrades and patching</li>
+<li>Change Mange Management; Upgrades, patching, etc...</li>
 <li>Operations Management (on call support)</li>
+</ul>
+</li>
+</ul>
+<h1 id="change-management">Change Management</h1>
+<p>Change is best when it is small and frequent. Our approach is to build a stead pipeline of low-risk changes coupled with automatic testing of smaller changes and reliable rollback of bad changes.  The critical interaction between change and reliability has lead us to the following change management approach:</p>
+<ul>
+<li>Automated continuous integration (CI) for each pull request (PR) with review.<ul>
+<li>Code review on each (PR)</li>
+<li>Automatic creation of preview environment. Especially useful for UI reviews</li>
+</ul>
+</li>
+<li>Automated continuous delivery (CD) for each PR accepted<ul>
+<li>New software release automatically deployed to staging environment</li>
+<li>higher-risk changes or those unable to be validated by  automatic means are vetted by human testers</li>
+</ul>
+</li>
+<li>Gated deployment to production environment<ul>
+<li>The software verified in staging is promoted to production.</li>
+<li>There is no rebuild, the same binaries and dependancies tested in staging are promoted to production</li>
+<li>All product source code and configuration as well as dependancies and their version is in source control and included in the release</li>
+</ul>
+</li>
+<li>Gated rollback if needed<ul>
+<li>Preference is to quickly deploy a fix release if production is found</li>
+<li>If rollback is needed the PR is simply reverted in source control. The reverted PR will result in previous release being deployed into production</li>
+<li>Full audit of activities in source control</li>
 </ul>
 </li>
 </ul>
@@ -266,6 +293,7 @@
 <p><strong>7. Architect for empowered teams</strong></p>
 <hr />
 <h1 id="how-does-jenkins-x-help">How does Jenkins X help?</h1>
+<p><img alt="" src="../img/jx-gitops-flow.png" /></p>
 <p><strong>Automates the setup of your tools + environments</strong></p>
 <ul>
 <li>Jenkins, helm, skaffold, nexus, monocular</li>
