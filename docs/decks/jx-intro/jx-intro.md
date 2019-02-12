@@ -1,5 +1,3 @@
-# Introduction
-
 ## What's  Included in this Article
 
 * **Deck** - A short presentation to...
@@ -12,23 +10,11 @@
 
 ## What's Left for a Future Article
 
-* **Metrics**
-* **Alerting/SLA**
-* **Auto Scaling**
-
----
-# How to be a High Preforming Team
-
->Armed with `robust data-gathering and statistical analysis` techniques, we have been able to discover significant results while working on the State of DevOps Report. We’ve been able to measure and quantify software delivery performance, its impact on organizational performance, and the various capabilities that contribute to these outcomes. 
-
-> The key to successful change is measuring and understanding the right things `with a focus on capabilities`—not on maturity.
-
-## Approach Based on Industry Research
-
-
-* Quotes above from the book: [Forsgren PhD, Nicole. Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations](https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339)
-* Many ideas presented here are based on the principles in this book.
-* Also technical details presented here are based on the book: [Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com](https://leanpub.com/the-devops-2-6-toolkit) and  [02-intro.sh](https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80)
+* Metrics
+* Logging
+* Alerting, SLOs/SLAs
+* Auto Scaling
+* Operations Management, on-call, support
 
 ---
 # Software Delivery
@@ -50,7 +36,7 @@
 
 # Change Management
 
-Change is best when it is small and frequent. Our approach is to build a stead pipeline of low-risk changes coupled with automatic testing of smaller changes and reliable rollback of bad changes.  The critical interaction between change and reliability has lead us to the following change management approach:
+Change is best when it is small and frequent. Our approach is to build a <u>stead pipeline of low-risk changes</u> coupled with automatic testing of smaller changes and reliable rollback of bad changes.  The critical interaction between change and reliability has lead us to the following change management approach:
 
 * Automated continuous integration (CI) for each pull request (PR) with review.
     * Code review on each (PR)
@@ -67,15 +53,14 @@ Change is best when it is small and frequent. Our approach is to build a stead p
     * Revert PR if rollback is needed. This will the previous release into production
     * Full audit of deployment/rollback activities in source control
 
-
 ---
-
 
 # Deployment Platform
 
+
 ![](img/deployment-platform.png)
 
-* **Run-time platform (Kubernetes)** - a "run anywhere" platform with facilities for deploying and running a variety of workload
+* **Run-time platform (Kubernetes)** - Kubernetes has become the defacto virtual infrastructure platform for DevOps. Every major Cloud provider now offers Kubernetes infrastructure on demand and the platform may also be installed in-house on private infrastructure, if required. It provides a homogeneous virtual infrastructure that can be scaled dynamically by adding or removing Nodes. Each Node participates in a single large flat private virtual network space. Summary of features:
     * Service discovery, load balancing
     * Self-healing
     * Storage orchestration
@@ -83,6 +68,7 @@ Change is best when it is small and frequent. Our approach is to build a stead p
     * Automatic binpacking
     * Horizontal scaling
     * Batch execution
+
 * **Customer Environment (Helm)** - Customer preview, staging and production environments that host client applications
     * A Helm chart used to describe the applications and all its dependancies
     * Chart configuration provide repeatable application installation and serve as a single point of authority
@@ -101,44 +87,42 @@ Change is best when it is small and frequent. Our approach is to build a stead p
 * **Log Management (Papertrail)** - Centralized log aggregation service in Papertrail or cloud provider.
 * **Infrastructure (GCP)** - Public cloud or in-premises infrastructure. GCP, AWS, Azure, etc..  
 
+---
+
+# DevOps Approach
+
+Adopt an approach that is based on industry research and best practices.
+
+## How to be a High Preforming Team
+
+>Armed with `robust data-gathering and statistical analysis techniques`... We’ve been able to measure and quantify software delivery performance, ..., and the various capabilities that contribute to these outcomes. 
+
+> The key to successful change is measuring and understanding the right things `with a focus on capabilities`—not on maturity.
+
+
+The main tool that developers will need to interact with is **Jenkins X**.  This tool is designed to make it simple for developers to work to DevOps principles and best practices. The approaches taken are based on the comprehensive research done for the book [Accelerate](https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339). See [this article](https://jenkins-x.io/about/concepts/) more detail on principles and practices.
+
+## principles
+
+* Improved deployment frequency
+* Shorter time between fixes
+* Lower failure rate of releases
+* Faster mean time to recovery (MTTR)
+
+## Practices
+
+* Loosely-coupled architectures
+* Automated provisioning
+* Continuous build/integration and delivery (CI/CD)
+* Automated release management
+* Incremental testing
+* Infrastructure configuration as Code (IaC)
+* Configuration management
+* Trunk based development and feature flags
+
 
 ---
 
-# Development Tools
-
-Taken from the *Accelerate* book here are 7 practices of high performing teams. Jenkins X uses open source software to automate these practices.   
-
-**1. Use version control for all artifacts**
-
-* source code and code (IaC)
-* when things go bad we can revert
-* provides an audit trail
-
-**2. Use trunk-based development**
-
-* developers collaborate on code in a single branch called 'trunk'. They therefore avoid merge hell, do not break the build, and avoid conflicts.
-* the use of long-lived featured branches is associated with low performing teams
-* trunk-based development is associated with high performing teams
-
-**3. Use loosely coupled architecture**
-
-* High performing teams use the cloud well to deliver highly available, multi-az deployments that are self healing and auto scaling.
-* microservices allows teams to move quicker; many *independent* teams can move quicker than one large team.
-* Kubernetes is ideal for running microservices.  
-    * runs everywhere while providing a consistent abstraction across all cloud providers
-    * a single way to package applications and run them in any cloud (or on premise)!
-    * multi cloud is now achievable by mortals
-* challenge: teams now need to figure out how to do many things well; microservices, cloud, Kubernetes, CI/CD, etc.. this is where Jenkins X comes in
-
-**4. Implement continuous integration (CI)**
-
-**5. Implement continuous delivery (CD)**
-
-**6. Automate your deployment process**
-
-**7. Architect for empowered teams**
-
---------------------------------------------------------------------------------
 
 # How does Jenkins X help?
 
@@ -146,6 +130,7 @@ Taken from the *Accelerate* book here are 7 practices of high performing teams. 
 
 * Jenkins, helm, skaffold, nexus, monocular
 * Developer not require to be an expert in Ops stack (but it helps!)
+* Ability to create custom quickstarts, helps to enforce best practices and project consistency
 
 **Automates the CI/CD for your application on Kubernetes**
 
@@ -165,6 +150,7 @@ Taken from the *Accelerate* book here are 7 practices of high performing teams. 
 **Lots of feedback**
 
 * E.g. commenting on issues as they hit Staging + Production
+
 
 ---
 
@@ -325,13 +311,17 @@ echo "nexus:
 PROJECT="aeg-jenkinsx"
 JX_ENV="jxeMMDD" # change this each as needed
 
+# More realistic examples
+JX_ENV="team1"
+JX_ENV="customer1"
+
 jx create cluster gke \
     -n $JX_ENV \
     -p $PROJECT \
     -z us-east1-b \
     -m n1-standard-1 \
     --min-num-nodes 2 \
-    --max-num-nodes 5 \
+    --max-num-nodes 6 \
     --default-admin-password aegadmin \
     --default-environment-prefix $JX_ENV \
     --preemptible=true  # if testing
@@ -344,25 +334,34 @@ jx create cluster gke \
 ? Would you like to enable Kaniko for building container images No     
 ? No existing ingress controller found in the kube-system namespace, shall we install one? Yes
 ? A local Jenkins X versions repository already exists, recreate with latest? Yes
-? Domain 34.73.130.212.nip.io
+...
 
+# Watch activities and wait for the first pipeline to finish
+jx get activities
 ```
 
---------------------------------------------------------------------------------
+---
 
-# Create Quickstart Project
+# Create Quickstart Demo
 
-Create a sample project to see how things work. Commands for this section have been adapted from the book: [03-quickstart.sh](https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5)
+Create a sample project to see how things work.
 
-Create a cluster as we did before, see [Create Cluster](#create-cluster). Then create the project.
+Create a cluster as we did before, see [Create Cluster](#create-cluster), then create the project.
 
 
-## Create project demo
+## Create project
 
 ```bash
 QS_PROJECT="jxqsMMDD" # change this as needed
 
+# More realistic examples
+QS_PROJECT="proj1"
+QS_PROJECT="app1"
+
+
 jx create quickstart -l go -p $QS_PROJECT -b
+jx create quickstart -l javascript -p $QS_PROJECT -b
+
 
 jx get build logs
 # watch as it:
@@ -389,7 +388,7 @@ git checkout -b bug123
 
 git add src
 git commit -a -m "Demo fix bug123"
-git psh origin bug123
+git push origin bug123
 hub pull-request
 # add comment and create PR
 # go to github and watch status
@@ -399,12 +398,15 @@ hub pull-request
 jx env  
 # you should see the preview environment
 # it exists as long as the PR is open
+# if you dont see the preview environment yet then watch the build logs, sometimes the cluster might need to scale up first...
 
+jx get build logs
+# watch the PR build
 # go to github and commit the PR
 # this will trigger a CD build
 
 jx get build logs
-# watch the cd build
+# watch again for tonygilkerson/$QS_PROJECT/master
 
 jx get apps
 # - now we should see version 0.0.2 has been deployed
@@ -430,12 +432,11 @@ jx open
 
 
 
-# TODO find a good place in the demo to show activities
-jx get activities
+
 ```
 
+---
 
---------------------------------------------------------------------------------
 
 # Cleanup
 
@@ -444,7 +445,7 @@ jx get activities
 Remove the cluster and everything else.
 
 ```bash
-GH_USER="tgilkerson"
+GH_USER="tonygilkerson"
 
 hub delete -y $GH_USER/environment-$JX_ENV-staging
 hub delete -y $GH_USER/environment-$JX_ENV-production
@@ -465,9 +466,50 @@ gcloud compute disks delete \
 ## Cleanup project
 
 ```bash
-hub delete -y $GH_USER/$QS_PROJECT
+
+
 
 cd ..
 rm -rf $QS_PROJECT
 
 ```
+
+---
+# Credits
+
+* Also technical details presented here are based on the book: [Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com](https://leanpub.com/the-devops-2-6-toolkit) and  [02-intro.sh](https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80)
+* Other commands adapted from the book: [03-quickstart.sh](https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5)
+
+
+---
+# Stop - Backup Material
+
+**1. Use version control for all artifacts**
+
+* source code and code (IaC)
+* when things go bad we can revert
+* provides an audit trail
+
+**2. Use trunk-based development**
+
+* developers collaborate on code in a single branch called 'trunk'. They therefore avoid merge hell, do not break the build, and avoid conflicts.
+* the use of long-lived featured branches is associated with low performing teams
+* trunk-based development is associated with high performing teams
+
+**3. Use loosely coupled architecture**
+
+* High performing teams use the cloud well to deliver highly available, multi-az deployments that are self healing and auto scaling.
+* microservices allows teams to move quicker; many *independent* teams can move quicker than one large team.
+* Kubernetes is ideal for running microservices.  
+    * runs everywhere while providing a consistent abstraction across all cloud providers
+    * a single way to package applications and run them in any cloud (or on premise)!
+    * multi cloud is now achievable by mortals
+* challenge: teams now need to figure out how to do many things well; microservices, cloud, Kubernetes, CI/CD, etc.. this is where Jenkins X comes in
+
+**4. Implement continuous integration (CI)**
+
+**5. Implement continuous delivery (CD)**
+
+**6. Automate your deployment process**
+
+**7. Architect for empowered teams**
