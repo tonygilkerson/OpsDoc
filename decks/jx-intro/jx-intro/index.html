@@ -113,12 +113,13 @@
         <li class="main active"><a href="#introduction">Introduction</a></li>
             <li><a href="#whats-included-in-this-article">What's  Included in this Article</a></li>
             <li><a href="#whats-left-for-a-future-article">What's Left for a Future Article</a></li>
-        <li class="main "><a href="#how-to-be-a-high-preforming-team">How to be a High Preforming Team</a></li>
-            <li><a href="#approach-based-on-industry-research">Approach Based on Industry Research</a></li>
         <li class="main "><a href="#software-delivery">Software Delivery</a></li>
         <li class="main "><a href="#change-management">Change Management</a></li>
         <li class="main "><a href="#deployment-platform">Deployment Platform</a></li>
-        <li class="main "><a href="#development-tools">Development Tools</a></li>
+        <li class="main "><a href="#devops-approach">DevOps Approach</a></li>
+            <li><a href="#how-to-be-a-high-preforming-team">How to be a High Preforming Team</a></li>
+            <li><a href="#principles">principles</a></li>
+            <li><a href="#practices">Practices</a></li>
         <li class="main "><a href="#how-does-jenkins-x-help">How does Jenkins X help?</a></li>
         <li class="main "><a href="#jenkins-x-overview">Jenkins X Overview</a></li>
             <li><a href="#gitflow">GitFlow</a></li>
@@ -128,11 +129,13 @@
         <li class="main "><a href="#quickstart-demo">Quickstart Demo</a></li>
             <li><a href="#prerequisite-tools">Prerequisite Tools</a></li>
             <li><a href="#create-cluster-with-jx">Create Cluster with jx</a></li>
-        <li class="main "><a href="#create-quickstart-project">Create Quickstart Project</a></li>
-            <li><a href="#create-project-demo">Create project demo</a></li>
+        <li class="main "><a href="#create-quickstart-demo">Create Quickstart Demo</a></li>
+            <li><a href="#create-project">Create project</a></li>
         <li class="main "><a href="#cleanup">Cleanup</a></li>
             <li><a href="#destroy-cluster">Destroy Cluster</a></li>
             <li><a href="#cleanup-project">Cleanup project</a></li>
+        <li class="main "><a href="#credits">Credits</a></li>
+        <li class="main "><a href="#stop-backup-material">Stop - Backup Material</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -154,21 +157,11 @@
 </ul>
 <h2 id="whats-left-for-a-future-article">What's Left for a Future Article</h2>
 <ul>
-<li><strong>Metrics</strong></li>
-<li><strong>Alerting/SLA</strong></li>
-<li><strong>Auto Scaling</strong></li>
-</ul>
-<hr />
-<h1 id="how-to-be-a-high-preforming-team">How to be a High Preforming Team</h1>
-<blockquote>
-<p>Armed with <code>robust data-gathering and statistical analysis</code> techniques, we have been able to discover significant results while working on the State of DevOps Report. We’ve been able to measure and quantify software delivery performance, its impact on organizational performance, and the various capabilities that contribute to these outcomes. </p>
-<p>The key to successful change is measuring and understanding the right things <code>with a focus on capabilities</code>—not on maturity.</p>
-</blockquote>
-<h2 id="approach-based-on-industry-research">Approach Based on Industry Research</h2>
-<ul>
-<li>Quotes above from the book: <a href="https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339">Forsgren PhD, Nicole. Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations</a></li>
-<li>Many ideas presented here are based on the principles in this book.</li>
-<li>Also technical details presented here are based on the book: <a href="https://leanpub.com/the-devops-2-6-toolkit">Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com</a> and  <a href="https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80">02-intro.sh</a></li>
+<li>Metrics</li>
+<li>Logging</li>
+<li>Alerting, SLOs/SLAs</li>
+<li>Auto Scaling</li>
+<li>Operations Management, on-call, support</li>
 </ul>
 <hr />
 <h1 id="software-delivery">Software Delivery</h1>
@@ -194,7 +187,7 @@
 </li>
 </ul>
 <h1 id="change-management">Change Management</h1>
-<p>Change is best when it is small and frequent. Our approach is to build a stead pipeline of low-risk changes coupled with automatic testing of smaller changes and reliable rollback of bad changes.  The critical interaction between change and reliability has lead us to the following change management approach:</p>
+<p>Change is best when it is small and frequent. Our approach is to build a <u>stead pipeline of low-risk changes</u> coupled with automatic testing of smaller changes and reliable rollback of bad changes.  The critical interaction between change and reliability has lead us to the following change management approach:</p>
 <ul>
 <li>Automated continuous integration (CI) for each pull request (PR) with review.<ul>
 <li>Code review on each (PR)</li>
@@ -223,7 +216,9 @@
 <h1 id="deployment-platform">Deployment Platform</h1>
 <p><img alt="" src="../img/deployment-platform.png" /></p>
 <ul>
-<li><strong>Run-time platform (Kubernetes)</strong> - a "run anywhere" platform with facilities for deploying and running a variety of workload<ul>
+<li>
+<p><strong>Run-time platform (Kubernetes)</strong> - Kubernetes has become the defacto virtual infrastructure platform for DevOps. Every major Cloud provider now offers Kubernetes infrastructure on demand and the platform may also be installed in-house on private infrastructure, if required. It provides a homogeneous virtual infrastructure that can be scaled dynamically by adding or removing Nodes. Each Node participates in a single large flat private virtual network space. Summary of features:</p>
+<ul>
 <li>Service discovery, load balancing</li>
 <li>Self-healing</li>
 <li>Storage orchestration</li>
@@ -233,7 +228,9 @@
 <li>Batch execution</li>
 </ul>
 </li>
-<li><strong>Customer Environment (Helm)</strong> - Customer preview, staging and production environments that host client applications<ul>
+<li>
+<p><strong>Customer Environment (Helm)</strong> - Customer preview, staging and production environments that host client applications</p>
+<ul>
 <li>A Helm chart used to describe the applications and all its dependancies</li>
 <li>Chart configuration provide repeatable application installation and serve as a single point of authority</li>
 <li>Versioned, in source control and portable</li>
@@ -260,42 +257,39 @@
 <li><strong>Infrastructure (GCP)</strong> - Public cloud or in-premises infrastructure. GCP, AWS, Azure, etc..  </li>
 </ul>
 <hr />
-<h1 id="development-tools">Development Tools</h1>
-<p>Taken from the <em>Accelerate</em> book here are 7 practices of high performing teams. Jenkins X uses open source software to automate these practices.   </p>
-<p><strong>1. Use version control for all artifacts</strong></p>
+<h1 id="devops-approach">DevOps Approach</h1>
+<p>Adopt an approach that is based on industry research and best practices.</p>
+<h2 id="how-to-be-a-high-preforming-team">How to be a High Preforming Team</h2>
+<blockquote>
+<p>Armed with <code>robust data-gathering and statistical analysis techniques</code>... We’ve been able to measure and quantify software delivery performance, ..., and the various capabilities that contribute to these outcomes. </p>
+<p>The key to successful change is measuring and understanding the right things <code>with a focus on capabilities</code>—not on maturity.</p>
+</blockquote>
+<p>The main tool that developers will need to interact with is <strong>Jenkins X</strong>.  This tool is designed to make it simple for developers to work to DevOps principles and best practices. The approaches taken are based on the comprehensive research done for the book <a href="https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339">Accelerate</a>. See <a href="https://jenkins-x.io/about/concepts/">this article</a> more detail on principles and practices.</p>
+<h2 id="principles">principles</h2>
 <ul>
-<li>source code and code (IaC)</li>
-<li>when things go bad we can revert</li>
-<li>provides an audit trail</li>
+<li>Improved deployment frequency</li>
+<li>Shorter time between fixes</li>
+<li>Lower failure rate of releases</li>
+<li>Faster mean time to recovery (MTTR)</li>
 </ul>
-<p><strong>2. Use trunk-based development</strong></p>
+<h2 id="practices">Practices</h2>
 <ul>
-<li>developers collaborate on code in a single branch called 'trunk'. They therefore avoid merge hell, do not break the build, and avoid conflicts.</li>
-<li>the use of long-lived featured branches is associated with low performing teams</li>
-<li>trunk-based development is associated with high performing teams</li>
+<li>Loosely-coupled architectures</li>
+<li>Automated provisioning</li>
+<li>Continuous build/integration and delivery (CI/CD)</li>
+<li>Automated release management</li>
+<li>Incremental testing</li>
+<li>Infrastructure configuration as Code (IaC)</li>
+<li>Configuration management</li>
+<li>Trunk based development and feature flags</li>
 </ul>
-<p><strong>3. Use loosely coupled architecture</strong></p>
-<ul>
-<li>High performing teams use the cloud well to deliver highly available, multi-az deployments that are self healing and auto scaling.</li>
-<li>microservices allows teams to move quicker; many <em>independent</em> teams can move quicker than one large team.</li>
-<li>Kubernetes is ideal for running microservices.  <ul>
-<li>runs everywhere while providing a consistent abstraction across all cloud providers</li>
-<li>a single way to package applications and run them in any cloud (or on premise)!</li>
-<li>multi cloud is now achievable by mortals</li>
-</ul>
-</li>
-<li>challenge: teams now need to figure out how to do many things well; microservices, cloud, Kubernetes, CI/CD, etc.. this is where Jenkins X comes in</li>
-</ul>
-<p><strong>4. Implement continuous integration (CI)</strong></p>
-<p><strong>5. Implement continuous delivery (CD)</strong></p>
-<p><strong>6. Automate your deployment process</strong></p>
-<p><strong>7. Architect for empowered teams</strong></p>
 <hr />
 <h1 id="how-does-jenkins-x-help">How does Jenkins X help?</h1>
 <p><strong>Automates the setup of your tools + environments</strong></p>
 <ul>
 <li>Jenkins, helm, skaffold, nexus, monocular</li>
 <li>Developer not require to be an expert in Ops stack (but it helps!)</li>
+<li>Ability to create custom quickstarts, helps to enforce best practices and project consistency</li>
 </ul>
 <p><strong>Automates the CI/CD for your application on Kubernetes</strong></p>
 <ul>
@@ -442,13 +436,17 @@ brew install jx
 PROJECT=&quot;aeg-jenkinsx&quot;
 JX_ENV=&quot;jxeMMDD&quot; # change this each as needed
 
+# More realistic examples
+JX_ENV=&quot;team1&quot;
+JX_ENV=&quot;customer1&quot;
+
 jx create cluster gke \
     -n $JX_ENV \
     -p $PROJECT \
     -z us-east1-b \
     -m n1-standard-1 \
     --min-num-nodes 2 \
-    --max-num-nodes 5 \
+    --max-num-nodes 6 \
     --default-admin-password aegadmin \
     --default-environment-prefix $JX_ENV \
     --preemptible=true  # if testing
@@ -461,18 +459,27 @@ jx create cluster gke \
 ? Would you like to enable Kaniko for building container images No     
 ? No existing ingress controller found in the kube-system namespace, shall we install one? Yes
 ? A local Jenkins X versions repository already exists, recreate with latest? Yes
-? Domain 34.73.130.212.nip.io
+...
 
+# Watch activities and wait for the first pipeline to finish
+jx get activities
 </code></pre>
 
 <hr />
-<h1 id="create-quickstart-project">Create Quickstart Project</h1>
-<p>Create a sample project to see how things work. Commands for this section have been adapted from the book: <a href="https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5">03-quickstart.sh</a></p>
-<p>Create a cluster as we did before, see <a href="#create-cluster">Create Cluster</a>. Then create the project.</p>
-<h2 id="create-project-demo">Create project demo</h2>
+<h1 id="create-quickstart-demo">Create Quickstart Demo</h1>
+<p>Create a sample project to see how things work.</p>
+<p>Create a cluster as we did before, see <a href="#create-cluster">Create Cluster</a>, then create the project.</p>
+<h2 id="create-project">Create project</h2>
 <pre><code class="bash">QS_PROJECT=&quot;jxqsMMDD&quot; # change this as needed
 
+# More realistic examples
+QS_PROJECT=&quot;proj1&quot;
+QS_PROJECT=&quot;app1&quot;
+
+
 jx create quickstart -l go -p $QS_PROJECT -b
+jx create quickstart -l javascript -p $QS_PROJECT -b
+
 
 jx get build logs
 # watch as it:
@@ -499,7 +506,7 @@ git checkout -b bug123
 
 git add src
 git commit -a -m &quot;Demo fix bug123&quot;
-git psh origin bug123
+git push origin bug123
 hub pull-request
 # add comment and create PR
 # go to github and watch status
@@ -509,12 +516,15 @@ hub pull-request
 jx env  
 # you should see the preview environment
 # it exists as long as the PR is open
+# if you dont see the preview environment yet then watch the build logs, sometimes the cluster might need to scale up first...
 
+jx get build logs
+# watch the PR build
 # go to github and commit the PR
 # this will trigger a CD build
 
 jx get build logs
-# watch the cd build
+# watch again for tonygilkerson/$QS_PROJECT/master
 
 jx get apps
 # - now we should see version 0.0.2 has been deployed
@@ -540,15 +550,14 @@ jx open
 
 
 
-# TODO find a good place in the demo to show activities
-jx get activities
+
 </code></pre>
 
 <hr />
 <h1 id="cleanup">Cleanup</h1>
 <h2 id="destroy-cluster">Destroy Cluster</h2>
 <p>Remove the cluster and everything else.</p>
-<pre><code class="bash">GH_USER=&quot;tgilkerson&quot;
+<pre><code class="bash">GH_USER=&quot;tonygilkerson&quot;
 
 hub delete -y $GH_USER/environment-$JX_ENV-staging
 hub delete -y $GH_USER/environment-$JX_ENV-production
@@ -567,12 +576,50 @@ gcloud compute disks delete \
 </code></pre>
 
 <h2 id="cleanup-project">Cleanup project</h2>
-<pre><code class="bash">hub delete -y $GH_USER/$QS_PROJECT
+<pre><code class="bash">
+
 
 cd ..
 rm -rf $QS_PROJECT
 
-</code></pre></div>
+</code></pre>
+
+<hr />
+<h1 id="credits">Credits</h1>
+<ul>
+<li>Also technical details presented here are based on the book: <a href="https://leanpub.com/the-devops-2-6-toolkit">Viktor Farcic. The DevOps 2.6 Toolkit: Jenkins X leanpub.com</a> and  <a href="https://gist.github.com/vfarcic/8cef206b4df0b1bbec3060d1d45c2a80">02-intro.sh</a></li>
+<li>Other commands adapted from the book: <a href="https://gist.github.com/vfarcic/a6a6ebc16f75e2cd8902f7695cbce5a5">03-quickstart.sh</a></li>
+</ul>
+<hr />
+<h1 id="stop-backup-material">Stop - Backup Material</h1>
+<p><strong>1. Use version control for all artifacts</strong></p>
+<ul>
+<li>source code and code (IaC)</li>
+<li>when things go bad we can revert</li>
+<li>provides an audit trail</li>
+</ul>
+<p><strong>2. Use trunk-based development</strong></p>
+<ul>
+<li>developers collaborate on code in a single branch called 'trunk'. They therefore avoid merge hell, do not break the build, and avoid conflicts.</li>
+<li>the use of long-lived featured branches is associated with low performing teams</li>
+<li>trunk-based development is associated with high performing teams</li>
+</ul>
+<p><strong>3. Use loosely coupled architecture</strong></p>
+<ul>
+<li>High performing teams use the cloud well to deliver highly available, multi-az deployments that are self healing and auto scaling.</li>
+<li>microservices allows teams to move quicker; many <em>independent</em> teams can move quicker than one large team.</li>
+<li>Kubernetes is ideal for running microservices.  <ul>
+<li>runs everywhere while providing a consistent abstraction across all cloud providers</li>
+<li>a single way to package applications and run them in any cloud (or on premise)!</li>
+<li>multi cloud is now achievable by mortals</li>
+</ul>
+</li>
+<li>challenge: teams now need to figure out how to do many things well; microservices, cloud, Kubernetes, CI/CD, etc.. this is where Jenkins X comes in</li>
+</ul>
+<p><strong>4. Implement continuous integration (CI)</strong></p>
+<p><strong>5. Implement continuous delivery (CD)</strong></p>
+<p><strong>6. Automate your deployment process</strong></p>
+<p><strong>7. Architect for empowered teams</strong></p></div>
         </div>
 
         <footer class="col-md-12">
