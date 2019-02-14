@@ -437,8 +437,7 @@ PROJECT=&quot;aeg-jenkinsx&quot;
 JX_ENV=&quot;jxeMMDD&quot; # change this each as needed
 
 # More realistic examples
-JX_ENV=&quot;team1&quot;
-JX_ENV=&quot;customer1&quot;
+JX_ENV=&quot;team02&quot;
 
 jx create cluster gke \
     -n $JX_ENV \
@@ -560,7 +559,8 @@ jx open
 <pre><code class="bash">GH_USER=&quot;tonygilkerson&quot;
 
 hub delete -y $GH_USER/environment-$JX_ENV-staging
-hub delete -y $GH_USER/environment-$JX_ENV-production
+
+
 
 rm -rf ~/.jx/environments/$GH_USER/environment-$JX_ENV-*
 rm -f ~/.jx/jenkinsAuth.yaml

@@ -112,6 +112,7 @@
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#kubernetes">Kubernetes</a></li>
             <li><a href="#docker-desktop-dashboard">Docker Desktop Dashboard</a></li>
+            <li><a href="#ingress">Ingress</a></li>
             <li><a href="#kubernetes-api-doc">Kubernetes API Doc</a></li>
         <li class="main "><a href="#bash-scripting-cheatsheet">Bash scripting cheatsheet</a></li>
         <li class="main "><a href="#the-devops-23-toolkit-kubernetes">The DevOps 2.3 Toolkit: Kubernetes</a></li>
@@ -178,6 +179,43 @@ kubectl create -f https://raw.githubusercontent.com/kubernetes/heapster/master/d
 <li>https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui</li>
 <li>https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/  </li>
 </ul>
+<h2 id="ingress">Ingress</h2>
+<p>To install ingress controller on docker-desktop, see The DevOps 2.5 Toolkit location 1532 and <a href="https://gist.github.com/vfarcic/4d9ab04058cf00b9dd0faac11bda8f13">vfarcic/docker-monitor.sh</a> for more commands.</p>
+<pre><code class="bash">kubectl apply -f \
+    https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
+
+kubectl apply -f \
+    https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml
+</code></pre>
+
+<p>For eample, to  expose <strong>node-red</strong> to the ingress controller just created, set <code>ingress.enabled</code> and the <code>ingress.hosts</code>.  <strong>Note:</strong> For docker-desktop the <code>LB_IP</code> needs to be the ip of your laptop.  If you were in the cloud this would just be your cluster IP.</p>
+<pre><code class="bash">#################
+# Install
+#################
+
+ping -a $(hostname). # to display your IP address
+LB_IP=10.0.0.23.     # this can change!
+
+RED_ADDR=red.$LB_IP.nip.io
+
+# Install node-rd
+helm install --name aeg-red-release \
+  --set config.timezone=&quot;America/New_York&quot; \
+  --set ingress.enabled=&quot;true&quot; \
+  --set ingress.hosts={$RED_ADDR} \
+    stable/node-red
+
+# To open node-red in your browser
+open http://red.10.0.0.23.nip.io/
+
+#################
+# cleanup
+#################
+
+helm delete aeg-red-release --purge
+
+</code></pre>
+
 <h2 id="kubernetes-api-doc">Kubernetes API Doc</h2>
 <ul>
 <li><a href="https://v1-9.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#-strong-api-overview-strong-">Kubernetes API</a></li>
