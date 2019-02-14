@@ -69,6 +69,47 @@ Configure access:
 * https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui
 * https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/  
 
+## Ingress
+
+To install ingress controller on docker-desktop, see The DevOps 2.5 Toolkit location 1532 and [vfarcic/docker-monitor.sh](https://gist.github.com/vfarcic/4d9ab04058cf00b9dd0faac11bda8f13) for more commands.
+
+```bash
+kubectl apply -f \
+    https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
+
+kubectl apply -f \
+    https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml
+```
+
+For eample, to  expose **node-red** to the ingress controller just created, set `ingress.enabled` and the `ingress.hosts`.  **Note:** For docker-desktop the `LB_IP` needs to be the ip of your laptop.  If you were in the cloud this would just be your cluster IP.
+
+```bash
+#################
+# Install
+#################
+
+ping -a $(hostname). # to display your IP address
+LB_IP=10.0.0.23.     # this can change!
+
+RED_ADDR=red.$LB_IP.nip.io
+
+# Install node-rd
+helm install --name aeg-red-release \
+  --set config.timezone="America/New_York" \
+  --set ingress.enabled="true" \
+  --set ingress.hosts={$RED_ADDR} \
+    stable/node-red
+
+# To open node-red in your browser
+open http://red.10.0.0.23.nip.io/
+
+#################
+# cleanup
+#################
+
+helm delete aeg-red-release --purge
+
+```
 
 ## Kubernetes API Doc
 

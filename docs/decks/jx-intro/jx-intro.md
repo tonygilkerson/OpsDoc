@@ -269,6 +269,7 @@ $ jx create quickstart node-http
 ```
 
 ---
+
 # Quickstart Demo
 
 
@@ -314,8 +315,7 @@ PROJECT="aeg-jenkinsx"
 JX_ENV="jxeMMDD" # change this each as needed
 
 # More realistic examples
-JX_ENV="team1"
-JX_ENV="customer1"
+JX_ENV="team02"
 
 jx create cluster gke \
     -n $JX_ENV \
@@ -450,7 +450,8 @@ Remove the cluster and everything else.
 GH_USER="tonygilkerson"
 
 hub delete -y $GH_USER/environment-$JX_ENV-staging
-hub delete -y $GH_USER/environment-$JX_ENV-production
+
+
 
 rm -rf ~/.jx/environments/$GH_USER/environment-$JX_ENV-*
 rm -f ~/.jx/jenkinsAuth.yaml
