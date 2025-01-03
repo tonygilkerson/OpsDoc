@@ -1,3 +1,35 @@
+# gcloud cli
+
+```bash
+# first time setups
+# run again to add a new account
+gcloud init
+
+# list accounts and see which is active
+gcloud config configurations list
+
+# list the config
+gcloud config list
+
+
+
+```
+
+# kubectl cli
+
+[cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+```bash
+
+# list of contexts
+kubectl config view --output='json' | jq .users[].name
+
+
+# show current context
+kubectl config current-context
+
+```
+
 # Kubernetes
 
 ## Docker Desktop Dashboard
@@ -110,6 +142,7 @@ open http://red.10.0.0.23.nip.io/
 helm delete aeg-red-release --purge
 
 ```
+
 
 ## Kubernetes API Doc
 
